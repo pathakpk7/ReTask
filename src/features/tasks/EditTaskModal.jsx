@@ -20,7 +20,7 @@ export function EditTaskModal() {
     description: '',
     priority: 'medium',
     dueDate: '',
-    estimatedTime: 0,
+    estimatedTime: 30,
     difficulty: 'medium',
     parentId: '',
     listId: 'inbox',
@@ -32,24 +32,23 @@ export function EditTaskModal() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (isEditModalOpen && modalTaskToEdit) {
-      const rec = modalTaskToEdit.recurrence;
+    if (modalTaskToEdit) {
       setFormData({
         title: modalTaskToEdit.title || '',
         description: modalTaskToEdit.description || '',
         priority: modalTaskToEdit.priority || 'medium',
-        dueDate: modalTaskToEdit.dueDate || '',
+        dueDate: modalTaskToEdit.dueDate ? modalTaskToEdit.dueDate.split('T')[0] : '',
         estimatedTime: modalTaskToEdit.estimatedTime || 0,
         difficulty: modalTaskToEdit.difficulty || 'medium',
         parentId: modalTaskToEdit.parentId || '',
         listId: modalTaskToEdit.listId || 'inbox',
-        isRecurring: Boolean(rec && rec.enabled),
-        recurrenceFrequency: rec?.frequency || 'daily',
-        recurrenceCustomDays: rec?.customDays || 1,
+        isRecurring: Boolean(modalTaskToEdit.recurrence && modalTaskToEdit.recurrence.enabled),
+        recurrenceFrequency: modalTaskToEdit.recurrence?.frequency || 'daily',
+        recurrenceCustomDays: modalTaskToEdit.recurrence?.customDays || 1,
       });
       setErrors({});
     }
-  }, [isEditModalOpen, modalTaskToEdit]);
+  }, [modalTaskToEdit]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -100,7 +99,7 @@ export function EditTaskModal() {
     <Modal
       isOpen={isEditModalOpen}
       onClose={closeEditModal}
-      title="// EDIT TASK PARAMETERS"
+      title="Edit Task"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
@@ -126,10 +125,10 @@ export function EditTaskModal() {
             value={formData.priority}
             onChange={handleChange}
           >
-            <option value="urgent">Urgent [P0]</option>
-            <option value="high">High [P1]</option>
-            <option value="medium">Medium [P2]</option>
-            <option value="low">Low [P3]</option>
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
           </Select>
 
           <Select
@@ -163,12 +162,12 @@ export function EditTaskModal() {
           />
 
           <Select
-            label="Parent Task (Reassign Hierarchy)"
+            label="Parent Task (Hierarchy)"
             name="parentId"
             value={formData.parentId}
             onChange={handleChange}
           >
-            <option value="">None [Root Level Task]</option>
+            <option value="">None (Root Task)</option>
             {availableParents.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.title}
@@ -191,24 +190,24 @@ export function EditTaskModal() {
         </div>
 
         {/* Recurrence Settings */}
-        <div className="p-[#050705] p-3 border border-[#1A261E] clip-cut-tr space-y-3">
+        <div className="p-3.5 rounded-xl bg-[#161B22] border border-white/[0.05] space-y-3">
           <label className="flex items-center gap-2.5 cursor-pointer">
             <input
               type="checkbox"
               name="isRecurring"
               checked={formData.isRecurring}
               onChange={handleChange}
-              className="accent-[#19C37D] w-4 h-4"
+              className="accent-emerald-500 w-4 h-4 rounded"
             />
-            <span className="font-mono text-xs font-bold text-[#E8F0EA] flex items-center gap-1.5 uppercase">
-              <Repeat className="w-3.5 h-3.5 text-[#19C37D]" /> Enable Task Recurrence
+            <span className="text-xs font-medium text-white flex items-center gap-1.5">
+              <Repeat className="w-3.5 h-3.5 text-emerald-400" /> Enable recurrence
             </span>
           </label>
 
           {formData.isRecurring && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <Select
-                label="Recurrence Frequency"
+                label="Frequency"
                 name="recurrenceFrequency"
                 value={formData.recurrenceFrequency}
                 onChange={handleChange}
@@ -234,7 +233,7 @@ export function EditTaskModal() {
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#1A261E]">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/[0.06]">
           <Button variant="ghost" onClick={closeEditModal}>
             Cancel
           </Button>

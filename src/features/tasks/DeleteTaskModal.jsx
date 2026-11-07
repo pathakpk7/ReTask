@@ -14,7 +14,7 @@ export function DeleteTaskModal() {
     tasks,
   } = useTaskContext();
 
-  const [deleteMode, setDeleteMode] = useState('descendants'); // 'only' | 'descendants'
+  const [deleteMode, setDeleteMode] = useState('descendants');
 
   if (!taskToDelete) return null;
 
@@ -30,65 +30,65 @@ export function DeleteTaskModal() {
     <Modal
       isOpen={isDeleteModalOpen}
       onClose={closeDeleteModal}
-      title="// CONFIRM TASK TERMINATION"
+      title="Delete Task"
     >
       <div className="space-y-4">
         {/* Warning Banner */}
-        <div className="flex items-start gap-3 p-3 bg-[#2A0E13] border border-[#FF4757]/40 clip-cut-tr">
-          <AlertTriangle className="w-5 h-5 text-[#FF4757] flex-shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20">
+          <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <h4 className="font-mono text-xs font-bold text-[#FF4757] uppercase">
-              Permanent Destruction Warning
+            <h4 className="text-xs font-semibold text-red-300">
+              Confirm deletion
             </h4>
-            <p className="text-xs font-sans text-[#E8F0EA]">
-              Are you sure you want to delete task:{' '}
-              <span className="font-mono text-[#19C37D] font-bold">"{taskToDelete.title}"</span>?
+            <p className="text-xs text-zinc-300 leading-relaxed">
+              Are you sure you want to delete{' '}
+              <strong className="text-white">"{taskToDelete.title}"</strong>?
             </p>
           </div>
         </div>
 
         {/* Options for Tasks with Subtasks */}
         {hasDescendants && (
-          <div className="p-4 bg-[#050705] border border-[#1A261E] space-y-3 clip-cut-tr">
-            <p className="text-xs font-mono text-[#829188] uppercase tracking-wider">
-              This task contains <span className="text-[#19C37D]">{descendants.length} subtask(s)</span>. Select termination mode:
+          <div className="p-4 rounded-xl bg-[#161B22] border border-white/[0.05] space-y-3">
+            <p className="text-xs text-zinc-300 font-medium">
+              This task contains {descendants.length} subtask(s). How should they be handled?
             </p>
 
             <div className="space-y-2">
-              <label className="flex items-center gap-3 p-2.5 bg-[#101712] border border-[#1A261E] hover:border-[#0B5D3B] cursor-pointer clip-cut-tr">
+              <label className="flex items-center gap-3 p-3 rounded-lg bg-[#0F1216] border border-white/[0.06] hover:border-white/10 cursor-pointer transition-colors">
                 <input
                   type="radio"
                   name="deleteMode"
                   value="descendants"
                   checked={deleteMode === 'descendants'}
                   onChange={(e) => setDeleteMode(e.target.value)}
-                  className="accent-[#FF4757]"
+                  className="accent-red-500"
                 />
                 <div>
-                  <div className="text-xs font-mono font-bold text-[#E8F0EA]">
-                    Delete Task & All Descendants
+                  <div className="text-xs font-medium text-white">
+                    Delete task and all subtasks
                   </div>
-                  <div className="text-[11px] font-sans text-[#829188]">
-                    Recursively remove this task and all child subtasks.
+                  <div className="text-[11px] text-zinc-400 mt-0.5">
+                    Recursively remove this task and its entire subtask tree.
                   </div>
                 </div>
               </label>
 
-              <label className="flex items-center gap-3 p-2.5 bg-[#101712] border border-[#1A261E] hover:border-[#0B5D3B] cursor-pointer clip-cut-tr">
+              <label className="flex items-center gap-3 p-3 rounded-lg bg-[#0F1216] border border-white/[0.06] hover:border-white/10 cursor-pointer transition-colors">
                 <input
                   type="radio"
                   name="deleteMode"
                   value="only"
                   checked={deleteMode === 'only'}
                   onChange={(e) => setDeleteMode(e.target.value)}
-                  className="accent-[#19C37D]"
+                  className="accent-emerald-500"
                 />
                 <div>
-                  <div className="text-xs font-mono font-bold text-[#E8F0EA]">
-                    Delete Task Only (Promote Subtasks)
+                  <div className="text-xs font-medium text-white">
+                    Delete task only (promote subtasks)
                   </div>
-                  <div className="text-[11px] font-sans text-[#829188]">
-                    Delete this task and reassign its subtasks up to parent level.
+                  <div className="text-[11px] text-zinc-400 mt-0.5">
+                    Reassign subtasks upward to the parent level.
                   </div>
                 </div>
               </label>
@@ -97,13 +97,13 @@ export function DeleteTaskModal() {
         )}
 
         {/* Action Controls */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#1A261E]">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/[0.06]">
           <Button variant="ghost" onClick={closeDeleteModal}>
             Cancel
           </Button>
           <Button variant="danger" onClick={handleConfirmDelete}>
-            <Trash2 className="w-4 h-4" />
-            <span>Terminate Task</span>
+            <Trash2 className="w-4 h-4 mr-1.5" />
+            <span>Delete</span>
           </Button>
         </div>
       </div>

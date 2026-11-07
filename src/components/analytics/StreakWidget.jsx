@@ -9,45 +9,45 @@ export function StreakWidget({ tasks }) {
   const metrics = calculateStreakMetrics(tasks, historyArray);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
       <Card className="p-4 flex items-center justify-between">
         <div>
-          <span className="text-[10px] font-mono text-[#829188] uppercase block">Current Streak</span>
-          <span className="font-mono text-3xl font-extrabold text-[#FFA502] flex items-center gap-1">
-            {metrics.currentStreak} <span className="text-xs text-[#829188]">DAYS</span>
+          <span className="text-xs text-zinc-400 block font-normal">Current Streak</span>
+          <span className="text-2xl font-bold text-white font-mono flex items-baseline gap-1 mt-0.5">
+            {metrics.currentStreak} <span className="text-xs font-sans text-zinc-400 font-normal">days</span>
           </span>
         </div>
-        <Flame className="w-8 h-8 text-[#FFA502] fill-current animate-pulse" />
+        <Flame className="w-6 h-6 text-amber-400 fill-amber-400/20" />
       </Card>
 
       <Card className="p-4 flex items-center justify-between">
         <div>
-          <span className="text-[10px] font-mono text-[#829188] uppercase block">Longest Record</span>
-          <span className="font-mono text-3xl font-extrabold text-[#19C37D] flex items-center gap-1">
-            {metrics.longestStreak} <span className="text-xs text-[#829188]">DAYS</span>
+          <span className="text-xs text-zinc-400 block font-normal">Longest Record</span>
+          <span className="text-2xl font-bold text-white font-mono flex items-baseline gap-1 mt-0.5">
+            {metrics.longestStreak} <span className="text-xs font-sans text-zinc-400 font-normal">days</span>
           </span>
         </div>
-        <Trophy className="w-8 h-8 text-[#0B5D3B]" />
+        <Trophy className="w-6 h-6 text-emerald-400" />
       </Card>
 
       <Card className="p-4 flex items-center justify-between">
         <div>
-          <span className="text-[10px] font-mono text-[#829188] uppercase block">Active Days</span>
-          <span className="font-mono text-3xl font-extrabold text-[#E8F0EA] flex items-center gap-1">
-            {metrics.activeDays} <span className="text-xs text-[#829188]">TOTAL</span>
+          <span className="text-xs text-zinc-400 block font-normal">Active Days</span>
+          <span className="text-2xl font-bold text-white font-mono flex items-baseline gap-1 mt-0.5">
+            {metrics.activeDays} <span className="text-xs font-sans text-zinc-400 font-normal">total</span>
           </span>
         </div>
-        <CalendarCheck className="w-8 h-8 text-[#19C37D]" />
+        <CalendarCheck className="w-6 h-6 text-emerald-400" />
       </Card>
 
       <Card className="p-4 flex items-center justify-between">
         <div>
-          <span className="text-[10px] font-mono text-[#829188] uppercase block">Weekly Consistency</span>
-          <span className="font-mono text-3xl font-extrabold text-[#1E90FF]">
+          <span className="text-xs text-zinc-400 block font-normal">Consistency</span>
+          <span className="text-2xl font-bold text-white font-mono mt-0.5 block">
             {metrics.weeklyConsistency}%
           </span>
         </div>
-        <Zap className="w-8 h-8 text-[#1E90FF]" />
+        <Zap className="w-6 h-6 text-blue-400" />
       </Card>
     </div>
   );

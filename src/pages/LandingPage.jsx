@@ -1,537 +1,659 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 import {
-  Terminal,
-  Zap,
-  CheckSquare,
-  Layers,
-  Flame,
-  ShieldAlert,
-  Clock,
   ArrowRight,
-  ChevronDown,
-  Play,
-  Pause,
-  Plus,
-  Sparkles,
-  Command,
-  Sliders,
-  BarChart3,
+  Check,
   CheckCircle2,
-  Calendar,
-  Folder,
-  Repeat,
+  Clock,
+  Compass,
+  CornerDownRight,
+  Flame,
+  Layers,
+  Menu,
+  Pause,
+  Play,
+  Plus,
+  RotateCcw,
+  ShieldCheck,
+  Sparkles,
+  TrendingUp,
+  X,
+  Zap,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
 
 export function LandingPage() {
   const navigate = useNavigate();
 
-  // Scroll Progress Percentage State
+  // Mobile menu open state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Scroll progress for subtle top indicator
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Sandbox State for Live Demo
-  const [sandboxTaskTitle, setSandboxTaskTitle] = useState('');
-  const [sandboxPriority, setSandboxPriority] = useState('urgent');
+  // Interactive Product Showcase Tab State
+  const [activeTab, setActiveTab] = useState('tree');
+
+  // Interactive Focus Chamber state
+  const [focusTime, setFocusTime] = useState(1500);
+  const [isFocusActive, setIsFocusActive] = useState(false);
+
+  // Interactive Live Sandbox state
+  const [sandboxInput, setSandboxInput] = useState('');
+  const [sandboxPriority, setSandboxPriority] = useState('High');
   const [sandboxTasks, setSandboxTasks] = useState([
-    { id: '1', title: 'Initialize ReTask Core Engine', completed: true, priority: 'urgent' },
-    { id: '2', title: 'Execute High-Velocity Operational Tasks', completed: false, priority: 'high' },
-    { id: '3', title: 'Run Persistent Focus Pomodoro Chamber', completed: false, priority: 'medium' },
+    { id: '1', title: 'Synthesize product roadmap', priority: 'Urgent', completed: true },
+    { id: '2', title: 'Break architecture into 4 sub-deliverables', priority: 'High', completed: false },
+    { id: '3', title: 'Schedule deep work Pomodoro chamber', priority: 'Medium', completed: false },
   ]);
-  const [activeTab, setActiveTab] = useState('hierarchy');
 
-  // Interactive Focus Timer Mock in Sandbox
-  const [focusSeconds, setFocusSeconds] = useState(1500);
-  const [isFocusRunning, setIsFocusRunning] = useState(false);
-
-  // Track page scroll progress for top progress bar
+  // Track scroll position
   useEffect(() => {
     const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight > 0) {
-        const currentProgress = (window.scrollY / totalHeight) * 100;
-        setScrollProgress(currentProgress);
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      if (total > 0) {
+        setScrollProgress((window.scrollY / total) * 100);
       }
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Timer countdown
   useEffect(() => {
     let interval = null;
-    if (isFocusRunning && focusSeconds > 0) {
-      interval = setInterval(() => setFocusSeconds((s) => s - 1), 1000);
+    if (isFocusActive && focusTime > 0) {
+      interval = setInterval(() => setFocusTime((t) => t - 1), 1000);
+    } else if (focusTime === 0) {
+      setIsFocusActive(false);
     }
     return () => clearInterval(interval);
-  }, [isFocusRunning, focusSeconds]);
+  }, [isFocusActive, focusTime]);
 
-  const handleAddSandboxTask = (e) => {
-    e.preventDefault();
-    if (!sandboxTaskTitle.trim()) return;
-    setSandboxTasks([
-      { id: Date.now().toString(), title: sandboxTaskTitle, completed: false, priority: sandboxPriority },
-      ...sandboxTasks,
-    ]);
-    setSandboxTaskTitle('');
-  };
-
-  const toggleSandboxTask = (id) => {
-    setSandboxTasks(
-      sandboxTasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
-  };
-
-  const formatTimer = (secs) => {
-    const m = Math.floor(secs / 60);
-    const s = secs % 60;
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  const scrollToSection = (id) => {
-    const element = document.querySelector(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const handleToggleSandbox = (id) => {
+    setSandboxTasks((prev) =>
+      prev.map((t) => {
+        if (t.id === id) {
+          const next = !t.completed;
+          if (next) {
+            confetti({
+              particleCount: 28,
+              spread: 55,
+              origin: { y: 0.7 },
+              colors: ['#10B981', '#34D399', '#6EE7B7'],
+            });
+          }
+          return { ...t, completed: next };
+        }
+        return t;
+      })
+    );
+  };
+
+  const handleAddSandboxTask = (e) => {
+    e.preventDefault();
+    if (!sandboxInput.trim()) return;
+    const newTask = {
+      id: Date.now().toString(),
+      title: sandboxInput.trim(),
+      priority: sandboxPriority,
+      completed: false,
+    };
+    setSandboxTasks([newTask, ...sandboxTasks]);
+    setSandboxInput('');
+  };
+
+  const scrollTo = (id) => {
+    const target = document.querySelector(id);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+      setMobileMenuOpen(false);
     }
   };
 
+  // Easing curves
+  const easeTransition = [0.16, 1, 0.3, 1];
+
   return (
-    <div className="min-h-screen bg-[#050705] text-[#E8F0EA] font-sans selection:bg-[#19C37D] selection:text-[#050705] relative">
-      {/* Scroll Progress Bar at Top */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-[#101712]">
+    <div className="min-h-screen bg-[#08090A] text-[#F3F4F6] font-sans selection:bg-[#10B981] selection:text-[#08090A] relative overflow-hidden">
+      {/* Refined scroll progress bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-[2px] bg-transparent">
         <div
-          className="h-full bg-gradient-to-r from-[#0B5D3B] via-[#19C37D] to-[#22E595] shadow-[0_0_10px_#19C37D] transition-all duration-150"
+          className="h-full bg-emerald-500 transition-all duration-150 ease-out"
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
 
-      {/* Dynamic Background Grid Lines */}
-      <div className="fixed inset-0 pointer-events-none opacity-20 bg-[linear-gradient(to_right,#1A261E_1px,transparent_1px),linear-gradient(to_bottom,#1A261E_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      {/* Atmospheric lighting */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-emerald-500/[0.07] blur-[140px] rounded-full" />
+        <div className="absolute top-[45%] -right-40 w-[600px] h-[600px] bg-emerald-500/[0.03] blur-[160px] rounded-full" />
+      </div>
 
-      {/* Sticky Neo-Skeuomorphic Navbar */}
-      <header className="sticky top-1 z-40 bg-[#0B100D]/90 backdrop-blur-md border-b border-[#1A261E]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/today')}>
+      {/* Navigation Bar */}
+      <header className="sticky top-0 z-40 bg-[#08090A]/85 backdrop-blur-xl border-b border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div
+            onClick={() => navigate('/')}
+            className="flex items-center gap-3 cursor-pointer group"
+          >
             <img
               src="/logo.png"
-              alt="ReTask Logo"
-              className="w-9 h-9 rounded border border-[#19C37D]/50 clip-cut-tr shadow-[0_0_12px_rgba(25,195,125,0.4)] object-cover"
+              alt="ReTask"
+              className="w-9 h-9 rounded-lg object-cover transition-transform duration-300 group-hover:scale-105"
             />
-            <div>
-              <div className="font-mono text-base font-extrabold tracking-widest text-[#E8F0EA] flex items-center gap-2">
-                RETASK <span className="text-[10px] px-1.5 py-0.5 bg-[#0B5D3B] text-[#19C37D] border border-[#19C37D]/50 clip-cut-tr">OS</span>
-              </div>
-              <p className="text-[9px] font-mono text-[#829188] uppercase tracking-tighter">
-                FOCUS • PLAN • ACHIEVE
-              </p>
+            <div className="flex flex-col">
+              <span className="text-base font-semibold tracking-tight text-white font-sans">
+                ReTask
+              </span>
+              <span className="text-xs text-zinc-400">
+                Workflow Environment
+              </span>
             </div>
           </div>
 
-          {/* Quick Nav Links with Smooth Scroll */}
-          <nav className="hidden md:flex items-center gap-6 font-mono text-xs text-[#829188]">
-            <button type="button" onClick={() => scrollToSection('#narrative')} className="hover:text-[#19C37D] transition-colors cursor-pointer">
-              NARRATIVE
+          <nav className="hidden md:flex items-center gap-8 text-sm text-zinc-300 font-medium">
+            <button
+              type="button"
+              onClick={() => scrollTo('#experience')}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Methodology
             </button>
-            <button type="button" onClick={() => scrollToSection('#architecture')} className="hover:text-[#19C37D] transition-colors cursor-pointer">
-              SYSTEM ENGINE
+            <button
+              type="button"
+              onClick={() => scrollTo('#showcase')}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Interactive Tour
             </button>
-            <button type="button" onClick={() => scrollToSection('#intelligence')} className="hover:text-[#19C37D] transition-colors cursor-pointer">
-              INTELLIGENCE
-            </button>
-            <button type="button" onClick={() => scrollToSection('#sandbox')} className="hover:text-[#19C37D] transition-colors cursor-pointer">
-              LIVE SANDBOX
+            <button
+              type="button"
+              onClick={() => scrollTo('#sandbox')}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Live Demo
             </button>
           </nav>
 
-          <Button variant="primary" size="md" onClick={() => navigate('/today')}>
-            <Zap className="w-4 h-4" />
-            <span>ENTER RETASK OS</span>
-          </Button>
+          <div className="hidden sm:flex items-center gap-3">
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => navigate('/today')}
+            >
+              <span>Launch App</span>
+              <ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+            className="p-2 text-zinc-400 hover:text-white md:hidden"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {/* Mobile dropdown */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-b border-white/[0.08] bg-[#0C0F13] px-6 py-6 space-y-4"
+            >
+              <button
+                type="button"
+                onClick={() => scrollTo('#experience')}
+                className="block w-full text-left text-sm text-zinc-300 hover:text-white py-1"
+              >
+                Methodology
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollTo('#showcase')}
+                className="block w-full text-left text-sm text-zinc-300 hover:text-white py-1"
+              >
+                Interactive Tour
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollTo('#sandbox')}
+                className="block w-full text-left text-sm text-zinc-300 hover:text-white py-1"
+              >
+                Live Demo
+              </button>
+              <div className="pt-2">
+                <Button
+                  variant="primary"
+                  fullWidth
+                  onClick={() => navigate('/today')}
+                >
+                  <span>Launch App</span>
+                  <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Hero Section */}
-      <section className="relative pt-16 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
-        <div className="text-center space-y-6 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#101712] border border-[#19C37D]/40 clip-cut-tr font-mono text-xs text-[#19C37D]">
-            <span className="w-2 h-2 rounded-full bg-[#19C37D] animate-ping" />
-            <span>PERSONAL PRODUCTIVITY OPERATING SYSTEM</span>
+      <section className="relative pt-24 pb-20 px-6 max-w-6xl mx-auto text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: easeTransition }}
+          className="space-y-6 max-w-3xl mx-auto"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs text-zinc-300">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>Redesigned for calm, deliberate progress</span>
           </div>
 
-          <h1 className="font-mono text-4xl sm:text-6xl font-black tracking-tight text-[#E8F0EA] uppercase leading-tight">
-            DECONSTRUCT THE CHAOS. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#19C37D] via-[#10B981] to-[#0B5D3B]">
-              OPERATE WITH PRECISION.
-            </span>
+          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-white leading-[1.1] font-display">
+            Turn complex objectives into tangible daily momentum
           </h1>
 
-          <p className="text-base sm:text-lg text-[#829188] max-w-2xl mx-auto font-sans leading-relaxed">
-            The world doesn't need another basic todo list. ReTask is a productivity OS built with deep hierarchical task trees, smart daily carry-forward, persistent focus chambers, and behavioral avoidance intelligence.
+          <p className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed font-body">
+            ReTask replaces flat, guilt-inducing lists with infinite hierarchical task trees,
+            automated daily carry-forward, and an integrated focus environment.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-            <Button variant="primary" size="lg" onClick={() => navigate('/today')}>
-              <Zap className="w-5 h-5" />
-              <span>LAUNCH OPERATING SYSTEM</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => navigate('/today')}
+            >
+              <span>Open Workspace</span>
+              <ArrowRight className="w-4 h-4 ml-1.5" />
             </Button>
-            <Button variant="secondary" size="lg" onClick={() => scrollToSection('#sandbox')}>
-              <Play className="w-4 h-4 text-[#19C37D]" />
-              <span>TRY LIVE SANDBOX</span>
+
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={() => scrollTo('#showcase')}
+            >
+              <span>Explore Interactive Tour</span>
             </Button>
           </div>
+        </motion.div>
 
-          {/* Interactive Floating Scroll Cue */}
-          <div
-            onClick={() => scrollToSection('#narrative')}
-            className="pt-8 cursor-pointer group flex flex-col items-center gap-2 text-[#829188] hover:text-[#19C37D] transition-colors"
-          >
-            <span className="font-mono text-[10px] uppercase tracking-widest font-bold">
-              SCROLL TO EXPLORE
-            </span>
-            <div className="p-2 border border-[#1A261E] group-hover:border-[#19C37D] clip-cut-tr animate-float bg-[#050705]">
-              <ChevronDown className="w-4 h-4 text-[#19C37D]" />
+        {/* Hero Interactive App Preview */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.2, ease: easeTransition }}
+          className="mt-16 text-left max-w-4xl mx-auto rounded-2xl bg-[#0F1216] border border-white/[0.08] shadow-elevated overflow-hidden"
+        >
+          <div className="p-4 border-b border-white/[0.06] flex items-center justify-between bg-[#13171E]/60">
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-white/10" />
+              <span className="w-3 h-3 rounded-full bg-white/10" />
+              <span className="w-3 h-3 rounded-full bg-white/10" />
+              <span className="ml-3 text-xs text-zinc-400 font-medium">ReTask / Today</span>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-zinc-400">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                Active Focus Session
+              </span>
             </div>
           </div>
-        </div>
 
-        {/* Live System Operational Ticker Bar */}
-        <div className="p-3 bg-[#0B100D] border border-[#1A261E] clip-cut-tr font-mono text-xs text-[#829188] flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-[#19C37D] font-bold">[REAL-TIME METRICS]</span>
-            <span>HIERARCHY: UNLIMITED TREE DEEP</span>
-          </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-[#FFA502] font-bold">[SMART ROLLOVER]</span>
-            <span>ZERO-GUILT CARRY-FORWARD</span>
-          </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-[#1E90FF] font-bold">[FOCUS ENGINE]</span>
-            <span>PERSISTENT 25m POMODORO</span>
-          </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-[#19C37D] font-bold">[PRIVACY]</span>
-            <span>100% LOCAL STORAGE PERSISTENCE</span>
-          </div>
-        </div>
-
-        {/* Interactive Hero System Preview Card */}
-        <div id="architecture" className="relative p-1 bg-gradient-to-b from-[#1A261E] via-[#0B100D] to-[#1A261E] clip-cut-tr-lg shadow-[0_0_50px_rgba(25,195,125,0.15)]">
-          <div className="bg-[#0B100D] border border-[#1A261E] p-6 space-y-6">
-            {/* Interactive Preview Tabs */}
-            <div className="flex items-center justify-between border-b border-[#1A261E] pb-4 flex-wrap gap-3">
-              <div className="flex items-center gap-2 font-mono text-xs">
-                <span className="w-3 h-3 bg-[#19C37D] clip-cut-tr" />
-                <span className="text-[#E8F0EA] font-bold uppercase">SYSTEM WORKSPACE PREVIEW</span>
+          <div className="p-6 sm:p-8 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.06]">
+              <div>
+                <h3 className="text-xl font-semibold text-white">Deliver enterprise application release</h3>
+                <p className="text-xs text-zinc-400 mt-1">
+                  Hierarchical breakdown with automatic parent progress aggregation
+                </p>
               </div>
-
-              <div className="flex items-center gap-2 font-mono text-xs">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('hierarchy')}
-                  className={`px-3 py-1.5 clip-cut-tr transition-all cursor-pointer ${
-                    activeTab === 'hierarchy'
-                      ? 'bg-[#19C37D] text-[#050705] font-bold'
-                      : 'bg-[#050705] text-[#829188] hover:text-[#E8F0EA] border border-[#1A261E]'
-                  }`}
-                >
-                  TASK TREE
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('focus')}
-                  className={`px-3 py-1.5 clip-cut-tr transition-all cursor-pointer ${
-                    activeTab === 'focus'
-                      ? 'bg-[#19C37D] text-[#050705] font-bold'
-                      : 'bg-[#050705] text-[#829188] hover:text-[#E8F0EA] border border-[#1A261E]'
-                  }`}
-                >
-                  FOCUS CHAMBER
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('intelligence')}
-                  className={`px-3 py-1.5 clip-cut-tr transition-all cursor-pointer ${
-                    activeTab === 'intelligence'
-                      ? 'bg-[#19C37D] text-[#050705] font-bold'
-                      : 'bg-[#050705] text-[#829188] hover:text-[#E8F0EA] border border-[#1A261E]'
-                  }`}
-                >
-                  INTELLIGENCE
-                </button>
-              </div>
-            </div>
-
-            {/* Preview Tab Content */}
-            {activeTab === 'hierarchy' && (
-              <div className="space-y-3 font-mono text-xs">
-                <div className="p-4 bg-[#050705] border border-[#1A261E] clip-cut-tr space-y-2">
-                  <div className="flex items-center justify-between text-[#E8F0EA] font-bold">
-                    <span className="flex items-center gap-2">
-                      <CheckSquare className="w-4 h-4 text-[#19C37D]" />
-                      Deploy ReTask OS Core Platform
-                    </span>
-                    <span className="px-2 py-0.5 bg-[#2A0E13] text-[#FF4757] border border-[#FF4757]/40">P0 URGENT</span>
-                  </div>
-                  <p className="text-[11px] text-[#829188]">
-                    Architecture setup for Geometric Neo-Skeuomorphism engine, state managers, and data persistence.
-                  </p>
-                  <div className="pl-6 space-y-1 text-[11px] border-l border-[#1A261E] mt-2">
-                    <div className="flex items-center justify-between text-[#19C37D]">
-                      <span>✓ Design Geometric UI Primitives</span>
-                      <span>100% COMPLETE</span>
-                    </div>
-                    <div className="flex items-center justify-between text-[#829188]">
-                      <span>└─ Implement Tactile Cut Buttons</span>
-                      <span>45m EST</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'focus' && (
-              <div className="p-8 bg-[#050705] border border-[#1A261E] clip-cut-tr text-center space-y-4">
-                <span className="font-mono text-xs text-[#19C37D] uppercase font-bold tracking-widest block">
-                  DEEP WORK FOCUS ENGINE
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono text-emerald-400 font-medium bg-emerald-500/10 px-2.5 py-1 rounded">
+                  75% Complete
                 </span>
-                <div className="font-mono text-5xl font-black text-[#E8F0EA] tracking-tighter">
-                  {formatTimer(focusSeconds)}
-                </div>
-                <div className="flex items-center justify-center gap-3">
-                  <Button
-                    variant={isFocusRunning ? 'secondary' : 'primary'}
-                    size="sm"
-                    onClick={() => setIsFocusRunning(!isFocusRunning)}
-                  >
-                    {isFocusRunning ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                    <span>{isFocusRunning ? 'PAUSE TIMER' : 'START FOCUS'}</span>
-                  </Button>
-                </div>
               </div>
-            )}
+            </div>
 
-            {activeTab === 'intelligence' && (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
-                <div className="p-4 bg-[#050705] border border-[#1A261E] clip-cut-tr space-y-1">
-                  <span className="text-[10px] text-[#829188] uppercase block">Completion Velocity</span>
-                  <span className="font-bold text-2xl text-[#19C37D]">94.2%</span>
+            {/* Tree Items */}
+            <div className="space-y-3">
+              <div className="p-3.5 rounded-lg bg-[#161B22] border border-white/[0.05] flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 rounded bg-emerald-500 text-[#08090A] flex items-center justify-center text-xs font-bold">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  </div>
+                  <span className="text-sm text-zinc-300 line-through">Security audit and credential sanitization</span>
                 </div>
-                <div className="p-4 bg-[#050705] border border-[#1A261E] clip-cut-tr space-y-1">
-                  <span className="text-[10px] text-[#829188] uppercase block">Current Streak</span>
-                  <span className="font-bold text-2xl text-[#FFA502] flex items-center gap-1">
-                    12 <span className="text-xs text-[#829188]">DAYS</span>
-                  </span>
-                </div>
-                <div className="p-4 bg-[#050705] border border-[#1A261E] clip-cut-tr space-y-1">
-                  <span className="text-[10px] text-[#829188] uppercase block">Avoidance Risk</span>
-                  <span className="font-bold text-2xl text-[#1E90FF]">LOW (0)</span>
-                </div>
+                <span className="text-xs text-zinc-500">Completed</span>
               </div>
-            )}
+
+              <div className="p-3.5 rounded-lg bg-[#161B22] border border-white/[0.05] flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 rounded bg-emerald-500 text-[#08090A] flex items-center justify-center text-xs font-bold">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  </div>
+                  <span className="text-sm text-zinc-300 line-through">Refactor core interaction state handlers</span>
+                </div>
+                <span className="text-xs text-zinc-500">Completed</span>
+              </div>
+
+              <div className="p-3.5 rounded-lg bg-[#161B22] border border-emerald-500/30 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 rounded border border-emerald-400/50 flex items-center justify-center" />
+                  <span className="text-sm text-white font-medium">Verify cross-device animation performance</span>
+                </div>
+                <span className="text-xs text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                  In Progress
+                </span>
+              </div>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* Chapter 01: Why Todo Lists Fail (The Story) */}
-      <section id="narrative" className="py-20 border-t border-[#1A261E] bg-[#0B100D]/50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <span className="font-mono text-xs text-[#19C37D] font-bold uppercase tracking-widest">
-            CHAPTER 01 • THE ARCHITECTURAL PARADIGM
-          </span>
-          <h2 className="font-mono text-3xl sm:text-4xl font-extrabold text-[#E8F0EA] uppercase">
-            WHY CONVENTIONAL TODO LISTS FAIL YOU
+      {/* Methodology Section */}
+      <section id="experience" className="py-24 px-6 max-w-6xl mx-auto">
+        <div className="max-w-2xl mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-display">
+            Designed for how humans actually accomplish work
           </h2>
-          <p className="text-sm sm:text-base text-[#829188]">
-            Flat lists collapse under real-world complexity. They treat a 10-minute micro-task the same as a 3-month engineering overhaul, breeding guilt and task avoidance.
+          <p className="text-zinc-400 mt-4 leading-relaxed font-body">
+            Traditional todo apps treat complex undertakings identically to trivial chores.
+            ReTask creates structure, context, and intelligent feedback.
           </p>
         </div>
 
-        {/* Comparison Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Traditional Todo Apps */}
-          <div className="p-6 bg-[#050705] border border-[#FF4757]/30 clip-cut-tr space-y-4">
-            <div className="flex items-center justify-between border-b border-[#FF4757]/20 pb-3">
-              <h3 className="font-mono text-sm font-bold text-[#FF4757] uppercase">
-                ✕ CONVENTIONAL TODO LISTS
-              </h3>
-              <span className="text-[10px] font-mono text-[#829188]">FLAT & CHAOTIC</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="p-8 rounded-2xl bg-[#0F1216] border border-white/[0.07] space-y-4 hover:border-white/[0.14] transition-colors">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <Layers className="w-5 h-5" />
             </div>
-            <ul className="space-y-3 font-sans text-xs text-[#829188]">
-              <li className="flex items-start gap-2">
-                <span className="text-[#FF4757] font-bold">✕</span>
-                <span><strong>Linear Overload:</strong> Hundreds of flat tasks mixed together with no hierarchy or context.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#FF4757] font-bold">✕</span>
-                <span><strong>Guilt-Driven Rollover:</strong> Red overdue badges that punish you for postponing tasks.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#FF4757] font-bold">✕</span>
-                <span><strong>Context Switching:</strong> Timer apps separated from your actual task workspace.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#FF4757] font-bold">✕</span>
-                <span><strong>Zero Intelligence:</strong> No detection when you repeatedly avoid or postpone difficult tasks.</span>
-              </li>
-            </ul>
+            <h3 className="text-lg font-semibold text-white">Hierarchical task trees</h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              Nest complex tasks infinitely. Child task completions automatically propagate upward,
+              giving you a clear, honest representation of overall progress.
+            </p>
           </div>
 
-          {/* ReTask OS */}
-          <div className="p-6 bg-[#0B100D] border border-[#19C37D] clip-cut-tr space-y-4 shadow-[0_0_20px_rgba(25,195,125,0.1)]">
-            <div className="flex items-center justify-between border-b border-[#19C37D]/30 pb-3">
-              <h3 className="font-mono text-sm font-bold text-[#19C37D] uppercase">
-                ✓ RETASK OPERATING SYSTEM
-              </h3>
-              <span className="text-[10px] font-mono text-[#19C37D]">INDUSTRIAL PRECISION</span>
+          <div className="p-8 rounded-2xl bg-[#0F1216] border border-white/[0.07] space-y-4 hover:border-white/[0.14] transition-colors">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+              <TrendingUp className="w-5 h-5" />
             </div>
-            <ul className="space-y-3 font-sans text-xs text-[#E8F0EA]">
-              <li className="flex items-start gap-2">
-                <span className="text-[#19C37D] font-bold">✓</span>
-                <span><strong>Infinite Tree Hierarchy:</strong> Nest subtasks infinitely with parent-child metrics & deep collapse logic.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#19C37D] font-bold">✓</span>
-                <span><strong>Smart Daily Carry-Forward:</strong> Automated zero-guilt rollover that preserves original schedule history.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#19C37D] font-bold">✓</span>
-                <span><strong>Persistent Focus Chamber:</strong> Built-in 25m Focus / 5m Rest Pomodoro timer state across routes.</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#19C37D] font-bold">✓</span>
-                <span><strong>Behavioral Avoidance Detection:</strong> Machine intelligence flags tasks postponed 3+ times with breakdown advice.</span>
-              </li>
-            </ul>
+            <h3 className="text-lg font-semibold text-white">Zero-guilt daily rollover</h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              Unfinished tasks cleanly advance into your next day without punitive red markers.
+              Original creation schedules are preserved for historical clarity.
+            </p>
+          </div>
+
+          <div className="p-8 rounded-2xl bg-[#0F1216] border border-white/[0.07] space-y-4 hover:border-white/[0.14] transition-colors">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">Avoidance intelligence</h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              When a difficult item is postponed repeatedly, ReTask gently flags it and provides
+              actionable recommendations to break the scope down into bite-sized actions.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Chapter 02: Core Feature Engine Showcase */}
-      <section id="intelligence" className="py-20 border-t border-[#1A261E] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <span className="font-mono text-xs text-[#19C37D] font-bold uppercase tracking-widest">
-            CHAPTER 02 • SYSTEM ENGINES
-          </span>
-          <h2 className="font-mono text-3xl sm:text-4xl font-extrabold text-[#E8F0EA] uppercase">
-            ENGINEERED FOR UNRIVALED EFFICIENCY
+      {/* Interactive Showcase Tour */}
+      <section id="showcase" className="py-24 px-6 max-w-6xl mx-auto border-t border-white/[0.06]">
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-4">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-display">
+            Explore the ReTask ecosystem
           </h2>
+          <p className="text-zinc-400 font-body">
+            Switch between core workflows to see how each tool connects into a single flow.
+          </p>
+
+          {/* Tab selector */}
+          <div className="inline-flex p-1 bg-[#161B22] border border-white/[0.08] rounded-xl mt-4">
+            <button
+              type="button"
+              onClick={() => setActiveTab('tree')}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                activeTab === 'tree'
+                  ? 'bg-emerald-500 text-[#08090A] shadow-sm font-semibold'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              Task Tree
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('focus')}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                activeTab === 'focus'
+                  ? 'bg-emerald-500 text-[#08090A] shadow-sm font-semibold'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              Focus Chamber
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('analytics')}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                activeTab === 'analytics'
+                  ? 'bg-emerald-500 text-[#08090A] shadow-sm font-semibold'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              Insights
+            </button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1 */}
-          <Card className="p-6 space-y-4 hover:border-[#19C37D] transition-all">
-            <div className="p-3 bg-[#050705] border border-[#19C37D] w-fit clip-cut-tr text-[#19C37D]">
-              <Layers className="w-6 h-6" />
-            </div>
-            <h3 className="font-mono text-base font-bold text-[#E8F0EA] uppercase">
-              01. DEEP HIERARCHICAL TASK TREES
-            </h3>
-            <p className="text-xs text-[#829188] leading-relaxed">
-              Deconstruct complex goals into manageable sub-operations. Dynamic completion bars automatically calculate percentage progress up the parent chain.
-            </p>
-          </Card>
+        {/* Dynamic Tab Body */}
+        <div className="max-w-3xl mx-auto rounded-2xl bg-[#0F1216] border border-white/[0.08] p-8 shadow-card">
+          {activeTab === 'tree' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-base font-semibold text-white">Hierarchical breakdown</h4>
+                  <p className="text-xs text-zinc-400">Subtasks roll up automatically to parent status</p>
+                </div>
+                <span className="text-xs text-emerald-400 font-medium">Interactive Demo</span>
+              </div>
 
-          {/* Card 2 */}
-          <Card className="p-6 space-y-4 hover:border-[#19C37D] transition-all">
-            <div className="p-3 bg-[#050705] border border-[#FFA502] w-fit clip-cut-tr text-[#FFA502]">
-              <Zap className="w-6 h-6" />
-            </div>
-            <h3 className="font-mono text-base font-bold text-[#E8F0EA] uppercase">
-              02. SMART DAILY ROLLOVER
-            </h3>
-            <p className="text-xs text-[#829188] leading-relaxed">
-              When a day ends, incomplete tasks automatically roll forward to Today while preserving original creation dates and tracking carry-forward velocity.
-            </p>
-          </Card>
+              <div className="space-y-3 text-sm">
+                <div className="p-4 rounded-xl bg-[#161B22] border border-white/[0.06] space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-white flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                      Q4 Platform Evolution
+                    </span>
+                    <span className="text-xs text-zinc-400 font-mono">66%</span>
+                  </div>
 
-          {/* Card 3 */}
-          <Card className="p-6 space-y-4 hover:border-[#19C37D] transition-all">
-            <div className="p-3 bg-[#050705] border border-[#1E90FF] w-fit clip-cut-tr text-[#1E90FF]">
-              <ShieldAlert className="w-6 h-6" />
+                  <div className="pl-6 space-y-2 border-l border-white/10 ml-1">
+                    <div className="flex items-center justify-between text-xs text-zinc-400">
+                      <span className="line-through flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5 text-emerald-400" /> Complete user research synthesis
+                      </span>
+                      <span className="text-emerald-400">Done</span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs text-zinc-400">
+                      <span className="line-through flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5 text-emerald-400" /> Design modular UI tokens
+                      </span>
+                      <span className="text-emerald-400">Done</span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs text-white">
+                      <span className="flex items-center gap-1.5">
+                        <CornerDownRight className="w-3.5 h-3.5 text-zinc-500" /> Deploy production release
+                      </span>
+                      <span className="text-amber-400">Today</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <h3 className="font-mono text-base font-bold text-[#E8F0EA] uppercase">
-              03. AVOIDANCE INTELLIGENCE
-            </h3>
-            <p className="text-xs text-[#829188] leading-relaxed">
-              Behavioral task analytics detect tasks carried forward 3+ times, flagging high-risk tasks and suggesting scope adjustments before burnout occurs.
-            </p>
-          </Card>
+          )}
+
+          {activeTab === 'focus' && (
+            <div className="text-center py-6 space-y-6">
+              <div>
+                <span className="text-xs text-emerald-400 font-medium uppercase tracking-wider">
+                  Deep Work Pomodoro
+                </span>
+                <div className="text-5xl sm:text-6xl font-bold tracking-tight text-white font-mono my-4">
+                  {formatTime(focusTime)}
+                </div>
+                <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+                  Timer state persists across routes. Switch freely without breaking flow.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center gap-3">
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => setIsFocusActive(!isFocusActive)}
+                >
+                  {isFocusActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                  <span>{isFocusActive ? 'Pause Session' : 'Start Focus'}</span>
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="md"
+                  onClick={() => {
+                    setIsFocusActive(false);
+                    setFocusTime(1500);
+                  }}
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  <span>Reset</span>
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'analytics' && (
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-base font-semibold text-white">Objective productivity metrics</h4>
+                <p className="text-xs text-zinc-400">No inflated vanity stats — only actionable behavioral clarity</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="p-4 rounded-xl bg-[#161B22] border border-white/[0.06] space-y-1">
+                  <span className="text-xs text-zinc-400">Completion Velocity</span>
+                  <div className="text-2xl font-bold text-emerald-400">92.4%</div>
+                  <span className="text-[11px] text-zinc-500">Consistent week-over-week</span>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#161B22] border border-white/[0.06] space-y-1">
+                  <span className="text-xs text-zinc-400">Active Streak</span>
+                  <div className="text-2xl font-bold text-white">14 Days</div>
+                  <span className="text-[11px] text-zinc-500">Unbroken focus cycle</span>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#161B22] border border-white/[0.06] space-y-1">
+                  <span className="text-xs text-zinc-400">Avoidance Score</span>
+                  <div className="text-2xl font-bold text-emerald-400">Healthy</div>
+                  <span className="text-[11px] text-zinc-500">0 overdue bottlenecks</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Chapter 03: Live Interactive Sandbox */}
-      <section id="sandbox" className="py-20 border-t border-[#1A261E] bg-[#0B100D] px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <span className="font-mono text-xs text-[#19C37D] font-bold uppercase tracking-widest">
-            CHAPTER 03 • LIVE INTERACTIVE SANDBOX
-          </span>
-          <h2 className="font-mono text-3xl sm:text-4xl font-extrabold text-[#E8F0EA] uppercase">
-            EXPERIENCE RETASK IN REAL TIME
+      {/* Live Interactive Sandbox */}
+      <section id="sandbox" className="py-24 px-6 max-w-6xl mx-auto border-t border-white/[0.06]">
+        <div className="text-center max-w-xl mx-auto mb-10 space-y-3">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-display">
+            Try the workflow right here
           </h2>
-          <p className="text-xs sm:text-sm text-[#829188]">
-            Test-drive the task creation and priority engine directly below.
+          <p className="text-zinc-400 font-body text-sm">
+            Add a task and complete items to experience the tactile micro-interactions.
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto bg-[#050705] border border-[#1A261E] p-6 clip-cut-tr space-y-6">
-          {/* Add Task Form inside Sandbox */}
+        <div className="max-w-2xl mx-auto rounded-2xl bg-[#0F1216] border border-white/[0.08] p-6 sm:p-8 space-y-6 shadow-card">
           <form onSubmit={handleAddSandboxTask} className="flex flex-col sm:flex-row gap-3">
             <input
               type="text"
-              value={sandboxTaskTitle}
-              onChange={(e) => setSandboxTaskTitle(e.target.value)}
-              placeholder="Type a new operation (e.g., Audit System Security)..."
-              className="flex-1 px-4 py-2 bg-[#0B100D] border border-[#1A261E] text-xs font-mono text-[#E8F0EA] focus:outline-none focus:border-[#19C37D]"
+              value={sandboxInput}
+              onChange={(e) => setSandboxInput(e.target.value)}
+              placeholder="Add an actionable goal..."
+              className="flex-1 px-4 py-2.5 rounded-lg bg-[#161B22] border border-white/10 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/60 transition-all"
             />
             <select
               value={sandboxPriority}
               onChange={(e) => setSandboxPriority(e.target.value)}
-              className="px-3 py-2 bg-[#0B100D] border border-[#1A261E] text-xs font-mono text-[#E8F0EA] focus:outline-none focus:border-[#19C37D]"
+              aria-label="Task priority"
+              className="px-3 py-2.5 rounded-lg bg-[#161B22] border border-white/10 text-xs text-zinc-300 focus:outline-none focus:border-emerald-500/60"
             >
-              <option value="urgent">P0 URGENT</option>
-              <option value="high">P1 HIGH</option>
-              <option value="medium">P2 MEDIUM</option>
-              <option value="low">P3 LOW</option>
+              <option value="Urgent">Urgent</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
             </select>
             <Button variant="primary" size="md" type="submit">
               <Plus className="w-4 h-4" />
-              <span>ADD TASK</span>
+              <span>Add</span>
             </Button>
           </form>
 
           {/* Sandbox Task List */}
-          <div className="space-y-2">
-            {sandboxTasks.map((t) => (
+          <div className="space-y-2.5">
+            {sandboxTasks.map((task) => (
               <div
-                key={t.id}
-                onClick={() => toggleSandboxTask(t.id)}
-                className={`p-3 border clip-cut-tr cursor-pointer transition-all flex items-center justify-between ${
-                  t.completed
-                    ? 'bg-[#0B100D]/40 border-[#1A261E] text-[#829188] line-through'
-                    : 'bg-[#0B100D] border-[#1A261E] text-[#E8F0EA] hover:border-[#19C37D]'
+                key={task.id}
+                onClick={() => handleToggleSandbox(task.id)}
+                className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
+                  task.completed
+                    ? 'bg-[#12161D]/50 border-white/[0.04] text-zinc-500'
+                    : 'bg-[#161B22] border-white/[0.07] text-zinc-200 hover:border-white/[0.14]'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <span
-                    className={`w-4 h-4 border flex items-center justify-center font-mono text-[10px] ${
-                      t.completed ? 'bg-[#19C37D] border-[#19C37D] text-[#050705]' : 'border-[#19C37D]'
+                  <div
+                    className={`w-5 h-5 rounded flex items-center justify-center transition-colors ${
+                      task.completed
+                        ? 'bg-emerald-500 text-[#08090A]'
+                        : 'border border-white/20 hover:border-emerald-400'
                     }`}
                   >
-                    {t.completed && '✓'}
+                    {task.completed && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                  </div>
+                  <span className={`text-sm ${task.completed ? 'line-through text-zinc-500' : 'text-zinc-200'}`}>
+                    {task.title}
                   </span>
-                  <span className="font-mono text-xs font-bold">{t.title}</span>
                 </div>
 
                 <span
-                  className={`font-mono text-[9px] px-2 py-0.5 border ${
-                    t.priority === 'urgent'
-                      ? 'bg-[#2A0E13] text-[#FF4757] border-[#FF4757]/40'
-                      : 'bg-[#0B5D3B]/40 text-[#19C37D] border-[#19C37D]/30'
+                  className={`text-xs px-2 py-0.5 rounded font-medium ${
+                    task.priority === 'Urgent'
+                      ? 'bg-red-500/10 text-red-400'
+                      : task.priority === 'High'
+                      ? 'bg-amber-500/10 text-amber-400'
+                      : 'bg-white/5 text-zinc-400'
                   }`}
                 >
-                  {t.priority.toUpperCase()}
+                  {task.priority}
                 </span>
               </div>
             ))}
@@ -539,111 +661,73 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Chapter 04: Dual Infinite Scroll Marquee Streams */}
-      <section className="py-16 border-t border-[#1A261E] overflow-hidden space-y-6">
-        <div className="text-center">
-          <span className="font-mono text-xs text-[#829188] uppercase tracking-widest font-bold">
-            PRODUCTIVITY INTELLIGENCE FEED
-          </span>
-        </div>
-
-        {/* Marquee Row 1 (Forward Infinite Loop) */}
-        <div className="flex overflow-hidden relative">
-          <div className="flex gap-6 animate-marquee whitespace-nowrap">
-            <div className="px-4 py-2 bg-[#0B100D] border border-[#1A261E] clip-cut-tr text-[#19C37D] font-mono text-xs">
-              ⚡ "Task tree nesting completely transformed how I break down complex engineering roadmaps."
-            </div>
-            <div className="px-4 py-2 bg-[#0B100D] border border-[#1A261E] clip-cut-tr text-[#E8F0EA] font-mono text-xs">
-              🎯 "Zero fake statistics. Pure behavioral intelligence and honest empty states."
-            </div>
-            <div className="px-4 py-2 bg-[#0B100D] border border-[#1A261E] clip-cut-tr text-[#FFA502] font-mono text-xs">
-              ⏱️ "Persistent Pomodoro focus timers that don't reset when switching routes."
-            </div>
-            <div className="px-4 py-2 bg-[#0B100D] border border-[#1A261E] clip-cut-tr text-[#1E90FF] font-mono text-xs">
-              📊 "GitHub-style 30-day productivity heatmap with historical day inspectors."
-            </div>
-            {/* Duplicated items for smooth seamless CSS infinite marquee loop */}
-            <div className="px-4 py-2 bg-[#0B100D] border border-[#1A261E] clip-cut-tr text-[#19C37D] font-mono text-xs">
-              ⚡ "Task tree nesting completely transformed how I break down complex engineering roadmaps."
-            </div>
-            <div className="px-4 py-2 bg-[#0B100D] border border-[#1A261E] clip-cut-tr text-[#E8F0EA] font-mono text-xs">
-              🎯 "Zero fake statistics. Pure behavioral intelligence and honest empty states."
-            </div>
-            <div className="px-4 py-2 bg-[#0B100D] border border-[#1A261E] clip-cut-tr text-[#FFA502] font-mono text-xs">
-              ⏱️ "Persistent Pomodoro focus timers that don't reset when switching routes."
-            </div>
-            <div className="px-4 py-2 bg-[#0B100D] border border-[#1A261E] clip-cut-tr text-[#1E90FF] font-mono text-xs">
-              📊 "GitHub-style 30-day productivity heatmap with historical day inspectors."
-            </div>
-          </div>
-        </div>
-
-        {/* Marquee Row 2 (Reverse Infinite Loop) */}
-        <div className="flex overflow-hidden relative">
-          <div className="flex gap-6 animate-marquee-reverse whitespace-nowrap">
-            <div className="px-4 py-2 bg-[#050705] border border-[#1A261E] clip-cut-tr text-[#829188] font-mono text-xs">
-              [SPEC] HTML5 DRAG & DROP WITH CIRCULAR DEPENDENCY BLOCKING
-            </div>
-            <div className="px-4 py-2 bg-[#050705] border border-[#1A261E] clip-cut-tr text-[#19C37D] font-mono text-xs">
-              [SYSTEM] 100% LOCAL STORAGE PERSISTENCE • ZERO CLOUD LATENCY
-            </div>
-            <div className="px-4 py-2 bg-[#050705] border border-[#1A261E] clip-cut-tr text-[#FFA502] font-mono text-xs">
-              [HOTKEYS] GLOBAL SHORTCUT ENGINE (N, E, D, SPACE, ENTER, /, F, ?)
-            </div>
-            <div className="px-4 py-2 bg-[#050705] border border-[#1A261E] clip-cut-tr text-[#1E90FF] font-mono text-xs">
-              [DESIGN] GEOMETRIC NEO-SKEUOMORPHISM VISUAL IDENTITY
-            </div>
-            {/* Duplicated items for reverse loop */}
-            <div className="px-4 py-2 bg-[#050705] border border-[#1A261E] clip-cut-tr text-[#829188] font-mono text-xs">
-              [SPEC] HTML5 DRAG & DROP WITH CIRCULAR DEPENDENCY BLOCKING
-            </div>
-            <div className="px-4 py-2 bg-[#050705] border border-[#1A261E] clip-cut-tr text-[#19C37D] font-mono text-xs">
-              [SYSTEM] 100% LOCAL STORAGE PERSISTENCE • ZERO CLOUD LATENCY
-            </div>
-            <div className="px-4 py-2 bg-[#050705] border border-[#1A261E] clip-cut-tr text-[#FFA502] font-mono text-xs">
-              [HOTKEYS] GLOBAL SHORTCUT ENGINE (N, E, D, SPACE, ENTER, /, F, ?)
-            </div>
-            <div className="px-4 py-2 bg-[#050705] border border-[#1A261E] clip-cut-tr text-[#1E90FF] font-mono text-xs">
-              [DESIGN] GEOMETRIC NEO-SKEUOMORPHISM VISUAL IDENTITY
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Final Call to Action Chamber */}
-      <section className="py-24 border-t border-[#1A261E] px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center space-y-8">
-        <div className="p-12 bg-gradient-to-b from-[#0B100D] to-[#050705] border border-[#19C37D]/50 clip-cut-tr-lg space-y-6 shadow-[0_0_60px_rgba(25,195,125,0.2)] max-w-4xl mx-auto">
-          <img
-            src="/logo.png"
-            alt="ReTask Logo"
-            className="w-16 h-16 rounded border border-[#19C37D]/50 mx-auto clip-cut-tr shadow-[0_0_20px_rgba(25,195,125,0.4)] object-cover"
-          />
-
-          <h2 className="font-mono text-3xl sm:text-5xl font-black text-[#E8F0EA] uppercase tracking-tight">
-            READY TO UPGRADE YOUR PRODUCTIVITY OPERATING SYSTEM?
+      {/* Final Call to Action */}
+      <section className="py-24 px-6 max-w-6xl mx-auto text-center border-t border-white/[0.06]">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white font-display">
+            Start accomplishing with clarity
           </h2>
 
-          <p className="text-sm sm:text-base text-[#829188] max-w-xl mx-auto font-sans">
-            No registration required. 100% client-side privacy. Zero cloud latency.
+          <p className="text-base text-zinc-400 font-body">
+            No signup forms. No cloud latency. 100% private local browser storage.
           </p>
 
-          <div className="pt-4">
-            <Button variant="primary" size="lg" onClick={() => navigate('/today')}>
-              <Zap className="w-5 h-5" />
-              <span>LAUNCH RETASK NOW</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
+          <div className="pt-2">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => navigate('/today')}
+            >
+              <span>Launch Workspace</span>
+              <ArrowRight className="w-4 h-4 ml-1.5" />
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Modern Clean Footer */}
-      <footer className="border-t border-[#1A261E] py-8 bg-[#0B100D] text-center font-sans text-xs text-[#829188] space-y-2">
-        <div className="flex items-center justify-center gap-2 font-mono text-sm font-bold text-[#E8F0EA]">
-          <img src="/logo.png" alt="ReTask" className="w-5 h-5 rounded" />
-          <span>ReTask</span>
+      {/* Refined Minimalist Footer */}
+      <footer className="border-t border-white/[0.06] py-12 px-6 max-w-6xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-zinc-500">
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="ReTask" className="w-6 h-6 rounded" />
+            <span className="font-medium text-zinc-400">ReTask</span>
+            <span>—</span>
+            <span>Focus, Plan, Achieve</span>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <button
+              type="button"
+              onClick={() => navigate('/today')}
+              className="hover:text-zinc-300 transition-colors"
+            >
+              Workspace
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/focus')}
+              className="hover:text-zinc-300 transition-colors"
+            >
+              Deep Focus
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/analytics')}
+              className="hover:text-zinc-300 transition-colors"
+            >
+              Analytics
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/settings')}
+              className="hover:text-zinc-300 transition-colors"
+            >
+              Settings
+            </button>
+          </div>
+
+          <p>© 2026 ReTask. Crafted for focused execution.</p>
         </div>
-        <p>© 2026 ReTask • Focus • Plan • Achieve. All rights reserved.</p>
       </footer>
     </div>
   );

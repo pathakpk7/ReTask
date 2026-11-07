@@ -30,7 +30,7 @@ function AppLayout() {
   useKeyboardShortcuts();
 
   return (
-    <div className="flex h-screen bg-[#050705] text-[#E8F0EA] overflow-hidden">
+    <div className="flex h-screen bg-[#08090A] text-[#F3F4F6] font-sans antialiased overflow-hidden">
       {/* Sidebar Navigation */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 

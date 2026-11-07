@@ -7,7 +7,6 @@ export function Card({
   className = '',
   selected = false,
   hoverable = false,
-  cutCorner = true,
   onClick,
   ...props
 }) {
@@ -16,20 +15,17 @@ export function Card({
       onClick={onClick}
       className={twMerge(
         clsx(
-          'relative bg-[#0B100D] border text-[#E8F0EA] transition-all duration-150',
-          cutCorner ? 'clip-cut-tr-lg' : 'rounded-none',
+          'relative bg-[#0F1216] border rounded-xl text-[#F3F4F6] transition-all duration-200',
           selected
-            ? 'border-[#19C37D] shadow-[0_0_15px_rgba(25,195,125,0.25)] bg-[#101712]'
-            : 'border-[#1A261E] shadow-neo-card',
-          hoverable && !selected && 'hover:border-[#0B5D3B] hover:bg-[#152019] cursor-pointer',
+            ? 'border-[#10B981]/60 shadow-[0_0_20px_-5px_rgba(16,185,129,0.25)] bg-[#12171E]'
+            : 'border-white/[0.07] shadow-card',
+          hoverable && !selected && 'hover:border-white/[0.16] hover:bg-[#14181F] cursor-pointer',
           onClick && 'cursor-pointer',
           className
         )
       )}
       {...props}
     >
-      {/* Top chamfer highlight line */}
-      <div className="absolute top-0 left-0 right-3 h-[1px] bg-gradient-to-r from-transparent via-[#26382C] to-transparent pointer-events-none" />
       {children}
     </div>
   );

@@ -7,38 +7,38 @@ export function ShortcutsHelpModal() {
   const { isShortcutsHelpOpen, closeShortcutsHelp } = useTaskContext();
 
   const shortcutList = [
-    { key: 'N', label: 'Create New Task' },
-    { key: 'E', label: 'Edit Selected Task' },
-    { key: 'D', label: 'Delete Selected Task' },
-    { key: 'Space', label: 'Toggle Complete / Reopen' },
-    { key: 'Enter', label: 'Select / Open Detail Panel' },
-    { key: 'Escape', label: 'Close Modals / Menus / Deselect' },
-    { key: '/', label: 'Focus Global Search' },
-    { key: 'F', label: 'Navigate to Focus Engine' },
-    { key: '↑ / ↓', label: 'Navigate Task Selection Up / Down' },
-    { key: '?', label: 'Open Keyboard Shortcuts Guide' },
+    { key: 'N', label: 'Create new task' },
+    { key: 'E', label: 'Edit selected task' },
+    { key: 'D', label: 'Delete selected task' },
+    { key: 'Space', label: 'Toggle completed state' },
+    { key: 'Enter', label: 'Open task detail panel' },
+    { key: 'Escape', label: 'Close modals / Deselect' },
+    { key: '/', label: 'Focus search input' },
+    { key: 'F', label: 'Open Deep Focus timer' },
+    { key: '↑ / ↓', label: 'Navigate tasks' },
+    { key: '?', label: 'Open this shortcuts guide' },
   ];
 
   return (
     <Modal
       isOpen={isShortcutsHelpOpen}
       onClose={closeShortcutsHelp}
-      title="// SYSTEM KEYBOARD SHORTCUTS CHEAT SHEET"
+      title="Keyboard Shortcuts"
     >
       <div className="space-y-4">
-        <div className="flex items-center gap-2 p-3 bg-[#050705] border border-[#19C37D] text-[#19C37D] font-mono text-xs clip-cut-tr">
-          <Keyboard className="w-4 h-4" />
-          <span>Press any hotkey while workspace text inputs are disarmed to trigger instant ops.</span>
+        <div className="flex items-center gap-2.5 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs">
+          <Keyboard className="w-4 h-4 flex-shrink-0" />
+          <span>Press these keys anytime while not editing a text input for quick actions.</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
           {shortcutList.map((sc) => (
             <div
               key={sc.key}
-              className="flex items-center justify-between p-2.5 bg-[#050705] border border-[#1A261E] clip-cut-tr"
+              className="flex items-center justify-between p-2.5 rounded-lg bg-[#161B22] border border-white/[0.05]"
             >
-              <span className="text-[#829188]">{sc.label}</span>
-              <kbd className="px-2 py-0.5 bg-[#101712] text-[#19C37D] border border-[#0B5D3B] font-bold">
+              <span className="text-zinc-300">{sc.label}</span>
+              <kbd className="px-2 py-0.5 rounded bg-white/10 text-emerald-400 font-mono font-medium border border-white/10 text-[11px]">
                 {sc.key}
               </kbd>
             </div>

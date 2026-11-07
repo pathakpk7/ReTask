@@ -6,8 +6,6 @@ import {
   Plus,
   Copy,
   Trash2,
-  Folder,
-  Tag,
   RotateCcw,
 } from 'lucide-react';
 
@@ -21,7 +19,6 @@ export function ContextMenu() {
     duplicateTask,
     openDeleteModal,
     updateTask,
-    lists,
   } = useTaskContext();
 
   const menuRef = useRef(null);
@@ -46,10 +43,10 @@ export function ContextMenu() {
     <div
       ref={menuRef}
       style={{ top: `${y}px`, left: `${x}px` }}
-      className="fixed z-50 w-56 bg-[#0B100D] border border-[#19C37D] shadow-[0_0_25px_rgba(25,195,125,0.3)] clip-cut-tr-lg py-1.5 font-mono text-xs text-[#E8F0EA] animate-fade-in"
+      className="fixed z-50 w-56 bg-[#0F1216]/95 backdrop-blur-xl border border-white/[0.12] shadow-elevated rounded-xl py-1.5 text-xs text-white"
     >
-      <div className="px-3 py-1 text-[10px] text-[#829188] uppercase border-b border-[#1A261E] mb-1 font-bold truncate">
-        // {task.title}
+      <div className="px-3 py-1.5 text-xs text-zinc-400 font-medium border-b border-white/[0.06] mb-1 truncate">
+        {task.title}
       </div>
 
       {/* Complete / Reopen */}
@@ -59,15 +56,15 @@ export function ContextMenu() {
           toggleComplete(task.id);
           closeContextMenu();
         }}
-        className="w-full text-left px-3 py-1.5 hover:bg-[#101712] hover:text-[#19C37D] flex items-center gap-2 transition-colors"
+        className="w-full text-left px-3 py-1.5 hover:bg-white/5 hover:text-emerald-400 flex items-center gap-2 transition-colors cursor-pointer"
       >
         {task.completed ? (
           <>
-            <RotateCcw className="w-3.5 h-3.5 text-[#19C37D]" /> Reopen Task
+            <RotateCcw className="w-3.5 h-3.5 text-emerald-400" /> Reopen task
           </>
         ) : (
           <>
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#19C37D]" /> Mark Complete
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Mark complete
           </>
         )}
       </button>
@@ -79,9 +76,9 @@ export function ContextMenu() {
           openEditModal(task);
           closeContextMenu();
         }}
-        className="w-full text-left px-3 py-1.5 hover:bg-[#101712] hover:text-[#19C37D] flex items-center gap-2 transition-colors"
+        className="w-full text-left px-3 py-1.5 hover:bg-white/5 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
       >
-        <Edit2 className="w-3.5 h-3.5" /> Edit Parameters
+        <Edit2 className="w-3.5 h-3.5 text-zinc-400" /> Edit details
       </button>
 
       {/* Add Subtask */}
@@ -91,9 +88,9 @@ export function ContextMenu() {
           openAddModal(task.id);
           closeContextMenu();
         }}
-        className="w-full text-left px-3 py-1.5 hover:bg-[#101712] hover:text-[#19C37D] flex items-center gap-2 transition-colors"
+        className="w-full text-left px-3 py-1.5 hover:bg-white/5 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
       >
-        <Plus className="w-3.5 h-3.5" /> Add Subtask
+        <Plus className="w-3.5 h-3.5 text-zinc-400" /> Add subtask
       </button>
 
       {/* Duplicate */}
@@ -103,36 +100,41 @@ export function ContextMenu() {
           duplicateTask(task.id);
           closeContextMenu();
         }}
-        className="w-full text-left px-3 py-1.5 hover:bg-[#101712] hover:text-[#19C37D] flex items-center gap-2 transition-colors"
+        className="w-full text-left px-3 py-1.5 hover:bg-white/5 hover:text-white flex items-center gap-2 transition-colors cursor-pointer"
       >
-        <Copy className="w-3.5 h-3.5" /> Duplicate Task
+        <Copy className="w-3.5 h-3.5 text-zinc-400" /> Duplicate
       </button>
 
-      <div className="my-1 border-t border-[#1A261E]" />
+      <div className="my-1 border-t border-white/[0.06]" />
 
       {/* Priority Quick Picker */}
-      <div className="px-3 py-1 text-[10px] text-[#829188] uppercase">Set Priority</div>
+      <div className="px-3 py-1 text-[11px] text-zinc-500 font-medium uppercase tracking-wider">Priority</div>
       <div className="grid grid-cols-4 gap-1 px-2 pb-1">
-        {['urgent', 'high', 'medium', 'low'].map((p) => (
+        {[
+          { key: 'urgent', label: 'U' },
+          { key: 'high', label: 'H' },
+          { key: 'medium', label: 'M' },
+          { key: 'low', label: 'L' },
+        ].map(({ key, label }) => (
           <button
-            key={p}
+            key={key}
             type="button"
             onClick={() => {
-              updateTask(task.id, { priority: p });
+              updateTask(task.id, { priority: key });
               closeContextMenu();
             }}
-            className={`py-0.5 text-[9px] uppercase border text-center transition-colors ${
-              task.priority === p
-                ? 'bg-[#0B5D3B] text-[#19C37D] border-[#19C37D]'
-                : 'bg-[#050705] text-[#829188] border-[#1A261E] hover:text-[#E8F0EA]'
+            className={`py-1 text-xs rounded border text-center transition-colors cursor-pointer ${
+              task.priority === key
+                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 font-semibold'
+                : 'bg-white/5 text-zinc-400 border-white/5 hover:text-white'
             }`}
           >
-            {p[0].toUpperCase()}
+            {label}
           </button>
         ))}
       </div>
 
-      <div className="my-1 border-t border-[#1A261E]" />
+      <div className="my-1 border-t border-white/[0.06]" />
 
       {/* Delete Task */}
       <button
@@ -141,9 +143,9 @@ export function ContextMenu() {
           openDeleteModal(task);
           closeContextMenu();
         }}
-        className="w-full text-left px-3 py-1.5 hover:bg-[#2A0E13] hover:text-[#FF4757] flex items-center gap-2 text-[#FF4757] transition-colors"
+        className="w-full text-left px-3 py-1.5 hover:bg-red-500/10 hover:text-red-400 flex items-center gap-2 text-red-400 transition-colors cursor-pointer"
       >
-        <Trash2 className="w-3.5 h-3.5" /> Terminate Task
+        <Trash2 className="w-3.5 h-3.5" /> Delete task
       </button>
     </div>
   );

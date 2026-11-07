@@ -43,62 +43,62 @@ export function TodayPage() {
   const todayProgress = totalTodayWorkload > 0 ? Math.round((completedTodayTasks.length / totalTodayWorkload) * 100) : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl mx-auto">
       {/* Daily Carry-Forward Banner */}
       {carriedForwardCount > 0 && (
-        <div className="p-3.5 bg-[#2B1D06] border border-[#FFA502]/40 clip-cut-tr flex items-center justify-between text-[#FFA502] font-mono text-xs">
+        <div className="p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-between text-amber-300 text-xs">
           <div className="flex items-center gap-2.5">
-            <Zap className="w-4 h-4 fill-current animate-pulse flex-shrink-0" />
+            <Zap className="w-4 h-4 text-amber-400 flex-shrink-0" />
             <span>
-              <strong>SMART CARRY-FORWARD ACTIVE:</strong> {carriedForwardCount} incomplete task(s) advanced from previous day. Original schedule preserved.
+              <strong>Smart rollover active:</strong> {carriedForwardCount} incomplete task(s) seamlessly carried forward from yesterday.
             </span>
           </div>
         </div>
       )}
 
       {/* Metrics Banner */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
         <Card className="p-4 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-mono text-[#829188] uppercase block">Due Today</span>
-            <span className="font-mono text-2xl font-bold text-[#19C37D]">{todayTasks.length}</span>
+            <span className="text-xs text-zinc-400 block font-normal">Due Today</span>
+            <span className="text-2xl font-bold text-white font-mono mt-0.5 block">{todayTasks.length}</span>
           </div>
-          <Calendar className="w-7 h-7 text-[#0B5D3B]" />
+          <Calendar className="w-6 h-6 text-emerald-400/80" />
         </Card>
 
         <Card className="p-4 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-mono text-[#829188] uppercase block">Finished Today</span>
-            <span className="font-mono text-2xl font-bold text-[#E8F0EA]">{completedTodayTasks.length}</span>
+            <span className="text-xs text-zinc-400 block font-normal">Finished Today</span>
+            <span className="text-2xl font-bold text-white font-mono mt-0.5 block">{completedTodayTasks.length}</span>
           </div>
-          <CheckCircle2 className="w-7 h-7 text-[#19C37D]" />
+          <CheckCircle2 className="w-6 h-6 text-emerald-400/80" />
         </Card>
 
         <Card className="p-4 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-mono text-[#829188] uppercase block">Overdue Queue</span>
-            <span className={`font-mono text-2xl font-bold ${overdueCount > 0 ? 'text-[#FF4757]' : 'text-[#829188]'}`}>
+            <span className="text-xs text-zinc-400 block font-normal">Overdue</span>
+            <span className={`text-2xl font-bold font-mono mt-0.5 block ${overdueCount > 0 ? 'text-red-400' : 'text-zinc-500'}`}>
               {overdueCount}
             </span>
           </div>
-          <AlertTriangle className={`w-7 h-7 ${overdueCount > 0 ? 'text-[#FF4757]' : 'text-[#829188]'}`} />
+          <AlertTriangle className={`w-6 h-6 ${overdueCount > 0 ? 'text-red-400' : 'text-zinc-500'}`} />
         </Card>
 
         <Card className="p-4 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-mono text-[#829188] uppercase block">Recurring Engine</span>
-            <span className="font-mono text-2xl font-bold text-[#19C37D]">{recurringCount}</span>
+            <span className="text-xs text-zinc-400 block font-normal">Recurring</span>
+            <span className="text-2xl font-bold text-white font-mono mt-0.5 block">{recurringCount}</span>
           </div>
-          <Repeat className="w-7 h-7 text-[#0B5D3B]" />
+          <Repeat className="w-6 h-6 text-emerald-400/80" />
         </Card>
       </div>
 
       {/* Daily Completion Progress Bar */}
       <Card className="p-4 space-y-2">
-        <div className="flex items-center justify-between font-mono text-xs">
-          <span className="text-[#829188] uppercase font-bold">Daily Workflow Velocity</span>
-          <span className="text-[#19C37D] font-bold">
-            {completedTodayTasks.length} of {totalTodayWorkload} Finished ({todayProgress}%)
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-zinc-400 font-medium">Daily completion progress</span>
+          <span className="text-emerald-400 font-medium font-mono">
+            {completedTodayTasks.length} of {totalTodayWorkload} completed ({todayProgress}%)
           </span>
         </div>
         <ProgressBar percent={todayProgress} size="md" showLabel={false} />
@@ -106,9 +106,9 @@ export function TodayPage() {
 
       {/* Task Queue */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-[#829188]">
-            Today's Operations ({todayTasks.length})
+        <div className="flex items-center justify-between pt-2">
+          <h2 className="text-sm font-semibold text-zinc-200">
+            Today's Tasks ({todayTasks.length})
           </h2>
           <Button variant="secondary" size="sm" onClick={() => openAddModal()}>
             <Plus className="w-3.5 h-3.5" />
@@ -117,18 +117,18 @@ export function TodayPage() {
         </div>
 
         {todayTasks.length === 0 ? (
-          <Card className="p-8 text-center space-y-4">
-            <div className="w-12 h-12 rounded-full bg-[#050705] border border-[#19C37D] flex items-center justify-center mx-auto text-[#19C37D]">
+          <Card className="p-10 text-center space-y-4">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-6 h-6" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-mono text-sm font-bold text-[#E8F0EA] uppercase">
-                {tasks.length === 0 ? 'No Tasks Created Yet' : 'All Operations Clear'}
+              <h3 className="text-base font-semibold text-white">
+                {tasks.length === 0 ? 'Your workspace is clear' : 'All tasks completed for today'}
               </h3>
-              <p className="text-xs font-sans text-[#829188] max-w-sm mx-auto">
+              <p className="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
                 {tasks.length === 0
-                  ? 'Your task workspace is empty. Click "+ Add Task" to create your first task.'
-                  : 'No pending tasks due for today. All scheduled operations completed on target.'}
+                  ? 'Get started by creating your first task or breaking down an upcoming goal.'
+                  : 'Great work! You have cleared everything scheduled for today.'}
               </p>
             </div>
             {tasks.length === 0 && (

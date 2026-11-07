@@ -97,17 +97,17 @@ export function TaskItem({
       onDragLeave={onDragLeave}
       onDrop={(e) => onDrop && onDrop(e, task)}
       onContextMenu={handleContextMenuEvent}
-      className={`relative group my-1 ${
+      className={`relative group my-1.5 ${
         isDropTarget && dropPosition === 'before'
-          ? 'border-t-2 border-[#19C37D]'
+          ? 'border-t-2 border-emerald-500'
           : isDropTarget && dropPosition === 'after'
-          ? 'border-b-2 border-[#19C37D]'
+          ? 'border-b-2 border-emerald-500'
           : ''
       }`}
     >
       {depth > 0 && (
         <div
-          className="absolute left-0 top-0 bottom-0 border-l border-[#1A261E] pointer-events-none"
+          className="absolute left-0 top-0 bottom-0 border-l border-white/10 pointer-events-none"
           style={{ left: `${indentPadding - 12}px` }}
         />
       )}
@@ -115,21 +115,21 @@ export function TaskItem({
       <div
         onClick={() => onSelect(task.id)}
         style={{ paddingLeft: `${Math.max(12, indentPadding + 12)}px` }}
-        className={`relative flex flex-col md:flex-row md:items-center justify-between p-3 transition-all duration-150 clip-cut-tr border cursor-pointer ${
+        className={`relative flex flex-col md:flex-row md:items-center justify-between p-3.5 transition-all duration-150 rounded-xl border cursor-pointer ${
           isDropTarget && dropPosition === 'inside'
-            ? 'bg-[#101712] border-[#19C37D] ring-2 ring-[#19C37D]'
+            ? 'bg-[#161B22] border-emerald-500 ring-2 ring-emerald-500/50'
             : selected || multiSelected
-            ? 'bg-[#101712] border-[#19C37D] shadow-[0_0_15px_rgba(25,195,125,0.25)]'
+            ? 'bg-[#161B22] border-emerald-500/60 shadow-[0_0_20px_-5px_rgba(16,185,129,0.25)]'
             : task.completed
-            ? 'bg-[#050705]/60 border-[#1A261E]/50 opacity-60'
-            : 'bg-[#0B100D] border-[#1A261E] hover:border-[#0B5D3B] hover:bg-[#152019]'
+            ? 'bg-[#0F1216]/50 border-white/[0.04] opacity-60'
+            : 'bg-[#0F1216] border-white/[0.07] hover:border-white/[0.14] hover:bg-[#13171F]'
         }`}
       >
         {/* Drag handle & Checkboxes */}
-        <div className="flex items-start md:items-center gap-2 flex-1 min-w-0 pr-2">
+        <div className="flex items-start md:items-center gap-2.5 flex-1 min-w-0 pr-2">
           {/* Drag Handle */}
-          <div className="cursor-grab active:cursor-grabbing text-[#4B5850] hover:text-[#19C37D] mt-0.5 md:mt-0 flex-shrink-0">
-            <GripVertical className="w-3.5 h-3.5" />
+          <div className="cursor-grab active:cursor-grabbing text-zinc-500 hover:text-zinc-300 mt-0.5 md:mt-0 flex-shrink-0">
+            <GripVertical className="w-4 h-4" />
           </div>
 
           {/* Multi-Select Checkbox */}
@@ -139,7 +139,7 @@ export function TaskItem({
             onChange={handleMultiSelectClick}
             onClick={(e) => e.stopPropagation()}
             aria-label={`Select ${task.title}`}
-            className="accent-[#19C37D] w-3.5 h-3.5 cursor-pointer mt-0.5 md:mt-0 flex-shrink-0"
+            className="accent-emerald-500 w-3.5 h-3.5 rounded cursor-pointer mt-0.5 md:mt-0 flex-shrink-0"
           />
 
           {/* Expand / Collapse Chevron */}
@@ -148,12 +148,12 @@ export function TaskItem({
               type="button"
               onClick={handleCollapseClick}
               aria-label={task.collapsed ? 'Expand subtasks' : 'Collapse subtasks'}
-              className="p-0.5 text-[#829188] hover:text-[#19C37D] hover:bg-[#1A261E] clip-cut-tr transition-colors"
+              className="p-1 text-zinc-400 hover:text-white rounded hover:bg-white/5 transition-colors"
             >
               {task.collapsed ? (
                 <ChevronRight className="w-4 h-4" />
               ) : (
-                <ChevronDown className="w-4 h-4 text-[#19C37D]" />
+                <ChevronDown className="w-4 h-4 text-emerald-400" />
               )}
             </button>
           ) : (
@@ -165,10 +165,10 @@ export function TaskItem({
             type="button"
             onClick={handleCheckboxClick}
             aria-label={task.completed ? 'Reopen task' : 'Complete task'}
-            className={`w-5 h-5 mt-0.5 md:mt-0 flex items-center justify-center border transition-all duration-150 clip-cut-tr flex-shrink-0 ${
+            className={`w-5 h-5 mt-0.5 md:mt-0 flex items-center justify-center rounded transition-all duration-150 flex-shrink-0 ${
               task.completed
-                ? 'bg-[#0B5D3B] border-[#19C37D] text-[#E8F0EA]'
-                : 'bg-[#050705] border-[#1A261E] hover:border-[#19C37D]'
+                ? 'bg-emerald-500 text-[#08090A]'
+                : 'border border-white/20 hover:border-emerald-400'
             }`}
           >
             {task.completed && <Check className="w-3.5 h-3.5 stroke-[3]" />}
@@ -178,10 +178,10 @@ export function TaskItem({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span
-                className={`font-sans text-xs md:text-sm font-medium tracking-wide truncate ${
+                className={`text-sm font-medium tracking-normal truncate ${
                   task.completed
-                    ? 'line-through text-[#829188]'
-                    : 'text-[#E8F0EA] group-hover:text-[#19C37D]'
+                    ? 'line-through text-zinc-500'
+                    : 'text-zinc-100 group-hover:text-emerald-300 transition-colors'
                 }`}
               >
                 {task.title}
@@ -191,27 +191,27 @@ export function TaskItem({
               {task.difficulty && <DifficultyBadge difficulty={task.difficulty} />}
 
               {task.carryForwardCount > 0 && !task.completed && (
-                <span className="inline-flex items-center gap-1 text-[9px] font-mono text-[#FFA502] bg-[#2B1D06] border border-[#FFA502]/40 px-1.5 py-0.5 clip-cut-tr">
-                  <Zap className="w-2.5 h-2.5 fill-current" /> Carried ({task.carryForwardCount}x)
+                <span className="inline-flex items-center gap-1 text-[11px] text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded font-normal">
+                  <Zap className="w-3 h-3" /> Carried ({task.carryForwardCount}x)
                 </span>
               )}
 
               {task.recurrence && task.recurrence.enabled && (
-                <span className="inline-flex items-center gap-1 text-[9px] font-mono text-[#19C37D] bg-[#0B5D3B]/40 border border-[#19C37D]/30 px-1.5 py-0.5 clip-cut-tr">
-                  <Repeat className="w-2.5 h-2.5" /> {task.recurrence.frequency}
+                <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-normal">
+                  <Repeat className="w-3 h-3" /> {task.recurrence.frequency}
                 </span>
               )}
 
               {listInfo && (
-                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono text-[#829188] bg-[#050705] border border-[#1A261E] px-1.5 py-0.5">
-                  <Folder className="w-2.5 h-2.5" style={{ color: listInfo.color }} />
+                <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-zinc-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: listInfo.color }} />
                   {listInfo.name}
                 </span>
               )}
             </div>
 
             {task.description && (
-              <p className="text-[11px] font-sans text-[#829188] line-clamp-1 mt-0.5">
+              <p className="text-xs text-zinc-400 line-clamp-1 mt-0.5 font-normal">
                 {task.description}
               </p>
             )}
@@ -219,7 +219,7 @@ export function TaskItem({
             {totalChildren > 0 && (
               <div className="mt-2 max-w-xs">
                 <ProgressBar percent={percentComplete} size="sm" />
-                <span className="text-[9px] font-mono text-[#829188] mt-0.5 block">
+                <span className="text-[11px] text-zinc-400 mt-1 block">
                   {completedChildren} of {totalChildren} subtasks finished
                 </span>
               </div>
@@ -228,14 +228,14 @@ export function TaskItem({
         </div>
 
         {/* Right Side: Badges & Action Toolbar */}
-        <div className="flex items-center justify-between md:justify-end gap-2 mt-2 md:mt-0 pt-2 md:pt-0 border-t md:border-t-0 border-[#1A261E]">
-          <div className="flex items-center gap-2 font-mono text-[10px]">
+        <div className="flex items-center justify-between md:justify-end gap-3 mt-2 md:mt-0 pt-2 md:pt-0 border-t md:border-t-0 border-white/[0.06]">
+          <div className="flex items-center gap-2 text-xs">
             {task.dueDate && (
               <span
-                className={`flex items-center gap-1 px-1.5 py-0.5 border ${
+                className={`flex items-center gap-1.5 px-2 py-0.5 rounded border ${
                   taskOverdue
-                    ? 'bg-[#2A0E13] text-[#FF4757] border-[#FF4757]/40'
-                    : 'bg-[#050705] text-[#829188] border-[#1A261E]'
+                    ? 'bg-red-500/10 text-red-400 border-red-500/20'
+                    : 'bg-white/5 text-zinc-400 border-white/10'
                 }`}
               >
                 <Calendar className="w-3 h-3" />
@@ -244,15 +244,15 @@ export function TaskItem({
             )}
 
             {task.estimatedTime > 0 && (
-              <span className="hidden sm:flex items-center gap-1 bg-[#050705] text-[#829188] border border-[#1A261E] px-1.5 py-0.5">
-                <Clock className="w-3 h-3 text-[#0B5D3B]" />
+              <span className="hidden sm:flex items-center gap-1 text-zinc-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                <Clock className="w-3 h-3 text-emerald-400" />
                 {task.estimatedTime}m
               </span>
             )}
           </div>
 
           <div className="flex items-center gap-1 opacity-90 md:opacity-0 group-hover:opacity-100 transition-opacity">
-            {/* Mobile Context Menu Button */}
+            {/* Context Menu Button */}
             <button
               type="button"
               onClick={(e) => {
@@ -262,9 +262,9 @@ export function TaskItem({
               }}
               title="Task Actions"
               aria-label="Task context menu"
-              className="p-1 text-[#829188] hover:text-[#19C37D] hover:bg-[#1A261E] clip-cut-tr"
+              className="p-1 text-zinc-400 hover:text-white rounded hover:bg-white/10"
             >
-              <MoreVertical className="w-3.5 h-3.5" />
+              <MoreVertical className="w-4 h-4" />
             </button>
 
             <button
@@ -272,9 +272,9 @@ export function TaskItem({
               onClick={handleAddSubtaskClick}
               title="Add subtask"
               aria-label="Add subtask"
-              className="p-1 text-[#829188] hover:text-[#19C37D] hover:bg-[#1A261E] clip-cut-tr transition-colors"
+              className="p-1 text-zinc-400 hover:text-emerald-400 rounded hover:bg-white/10 transition-colors"
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-4 h-4" />
             </button>
 
             <button
@@ -282,9 +282,9 @@ export function TaskItem({
               onClick={handleEditClick}
               title="Edit task"
               aria-label="Edit task"
-              className="p-1 text-[#829188] hover:text-[#E8F0EA] hover:bg-[#1A261E] clip-cut-tr transition-colors"
+              className="p-1 text-zinc-400 hover:text-white rounded hover:bg-white/10 transition-colors"
             >
-              <Edit2 className="w-3.5 h-3.5" />
+              <Edit2 className="w-4 h-4" />
             </button>
 
             <button
@@ -292,9 +292,9 @@ export function TaskItem({
               onClick={handleDeleteClick}
               title="Delete task"
               aria-label="Delete task"
-              className="p-1 text-[#829188] hover:text-[#FF4757] hover:bg-[#2A0E13] clip-cut-tr transition-colors"
+              className="p-1 text-zinc-400 hover:text-red-400 rounded hover:bg-red-500/10 transition-colors"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-4 h-4" />
             </button>
           </div>
         </div>

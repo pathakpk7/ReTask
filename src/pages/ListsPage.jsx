@@ -9,13 +9,13 @@ export function ListsPage() {
   const { lists, tasks, setActiveList, openListModal, deleteList } = useTaskContext();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between">
-        <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-[#829188]">
-          Categorical List System ({lists.length})
+        <h2 className="text-sm font-semibold text-zinc-200">
+          Lists ({lists.length})
         </h2>
         <Button variant="primary" size="sm" onClick={() => openListModal()}>
-          <Plus className="w-3.5 h-3.5" />
+          <Plus className="w-3.5 h-3.5 mr-1" />
           <span>New List</span>
         </Button>
       </div>
@@ -30,27 +30,27 @@ export function ListsPage() {
             <Card
               key={list.id}
               onClick={() => setActiveList(list.id)}
-              className="p-5 space-y-4 hover:border-[#19C37D] cursor-pointer group"
+              className="p-5 space-y-4 hover:border-white/[0.16] cursor-pointer group"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div
-                    className="p-2 border border-[#1A261E] clip-cut-tr"
-                    style={{ backgroundColor: `${list.color}15`, borderColor: list.color }}
+                    className="p-2.5 rounded-lg"
+                    style={{ backgroundColor: `${list.color}15`, border: `1px solid ${list.color}30` }}
                   >
                     <Folder className="w-5 h-5" style={{ color: list.color }} />
                   </div>
                   <div>
-                    <h3 className="font-mono text-sm font-bold text-[#E8F0EA] uppercase">
+                    <h3 className="text-sm font-semibold text-white">
                       {list.name}
                     </h3>
-                    <span className="text-[10px] font-mono text-[#829188]">
-                      ID: #{list.id}
+                    <span className="text-xs text-zinc-400">
+                      {listTasks.length} {listTasks.length === 1 ? 'task' : 'tasks'}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <button
                     type="button"
                     onClick={(e) => {
@@ -58,9 +58,9 @@ export function ListsPage() {
                       openListModal(list);
                     }}
                     title="Edit List"
-                    className="p-1 text-[#829188] hover:text-[#E8F0EA] hover:bg-[#101712] clip-cut-tr transition-colors"
+                    className="p-1.5 text-zinc-400 hover:text-white rounded hover:bg-white/5 transition-colors"
                   >
-                    <Edit2 className="w-3.5 h-3.5" />
+                    <Edit2 className="w-4 h-4" />
                   </button>
 
                   {list.id !== 'inbox' && (
@@ -77,22 +77,18 @@ export function ListsPage() {
                         }
                       }}
                       title="Delete List"
-                      className="p-1 text-[#829188] hover:text-[#FF4757] hover:bg-[#2A0E13] clip-cut-tr transition-colors"
+                      className="p-1.5 text-zinc-400 hover:text-red-400 rounded hover:bg-red-500/10 transition-colors"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   )}
-
-                  <span className="font-mono text-xs font-bold text-[#19C37D] bg-[#050705] border border-[#1A261E] px-2.5 py-1 clip-cut-tr">
-                    {listTasks.length} Tasks
-                  </span>
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <div className="flex justify-between font-mono text-[10px] text-[#829188]">
-                  <span>Completion Status</span>
-                  <span>{completedCount} / {listTasks.length} Done</span>
+              <div className="space-y-1.5 pt-1">
+                <div className="flex justify-between text-xs text-zinc-400">
+                  <span>Progress</span>
+                  <span className="font-mono text-zinc-300">{completedCount} of {listTasks.length} ({percent}%)</span>
                 </div>
                 <ProgressBar percent={percent} size="sm" showLabel={false} />
               </div>

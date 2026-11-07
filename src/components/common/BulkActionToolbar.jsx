@@ -2,7 +2,7 @@ import React from 'react';
 import { useTaskContext } from '../../store/TaskContext';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/FormControls';
-import { CheckCircle2, RotateCcw, Trash2, X, Tag, Folder } from 'lucide-react';
+import { CheckCircle2, RotateCcw, Trash2, X } from 'lucide-react';
 
 export function BulkActionToolbar() {
   const {
@@ -29,23 +29,23 @@ export function BulkActionToolbar() {
   };
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#0B100D] border border-[#19C37D] shadow-[0_0_30px_rgba(25,195,125,0.35)] clip-cut-tr-lg px-4 py-3 flex items-center gap-3 flex-wrap text-xs font-mono text-[#E8F0EA] animate-bounce-in max-w-[95vw]">
-      <div className="flex items-center gap-2 font-bold text-[#19C37D] border-r border-[#1A261E] pr-3">
-        <span className="w-2 h-2 rounded-full bg-[#19C37D] animate-ping" />
-        <span>{selectedTaskIds.length} SELECTED</span>
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#0F1216]/95 backdrop-blur-xl border border-white/[0.12] shadow-elevated rounded-2xl px-5 py-3 flex items-center gap-3.5 flex-wrap text-xs text-white max-w-[95vw]">
+      <div className="flex items-center gap-2 font-medium text-emerald-400 border-r border-white/10 pr-3.5">
+        <span className="w-2 h-2 rounded-full bg-emerald-400" />
+        <span>{selectedTaskIds.length} selected</span>
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">
         <Button variant="secondary" size="sm" onClick={bulkComplete}>
-          <CheckCircle2 className="w-3.5 h-3.5 text-[#19C37D]" /> Complete
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 mr-1" /> Done
         </Button>
 
         <Button variant="secondary" size="sm" onClick={bulkReopen}>
-          <RotateCcw className="w-3.5 h-3.5 text-[#19C37D]" /> Reopen
+          <RotateCcw className="w-3.5 h-3.5 mr-1" /> Reopen
         </Button>
 
         {/* Priority Picker */}
-        <div className="w-32">
+        <div className="w-28">
           <Select
             value=""
             onChange={(e) => {
@@ -53,22 +53,22 @@ export function BulkActionToolbar() {
             }}
           >
             <option value="">Priority...</option>
-            <option value="urgent">P0 Urgent</option>
-            <option value="high">P1 High</option>
-            <option value="medium">P2 Medium</option>
-            <option value="low">P3 Low</option>
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
           </Select>
         </div>
 
         {/* List Picker */}
-        <div className="w-32">
+        <div className="w-28">
           <Select
             value=""
             onChange={(e) => {
               if (e.target.value) bulkChangeList(e.target.value);
             }}
           >
-            <option value="">Move List...</option>
+            <option value="">Move...</option>
             {lists.map((l) => (
               <option key={l.id} value={l.id}>
                 {l.name}
@@ -78,7 +78,7 @@ export function BulkActionToolbar() {
         </div>
 
         <Button variant="danger" size="sm" onClick={handleBulkDelete}>
-          <Trash2 className="w-3.5 h-3.5" /> Delete
+          <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
         </Button>
       </div>
 
@@ -87,7 +87,7 @@ export function BulkActionToolbar() {
         onClick={clearMultiSelect}
         title="Deselect All"
         aria-label="Clear selection"
-        className="p-1 text-[#829188] hover:text-[#E8F0EA] hover:bg-[#1A261E] clip-cut-tr transition-colors ml-auto"
+        className="p-1 text-zinc-400 hover:text-white rounded hover:bg-white/5 transition-colors ml-auto"
       >
         <X className="w-4 h-4" />
       </button>

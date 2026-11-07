@@ -11,7 +11,6 @@ import { BarChart3, Clock, Target, Zap, Folder, Info } from 'lucide-react';
 export function AnalyticsPage() {
   const { tasks, lists } = useTaskContext();
 
-  // Memoized metric calculations to prevent redundant recalculation
   const analyticsData = useMemo(() => {
     const totalTasks = tasks.length;
     const completedTasks = tasks.filter((t) => t.completed).length;
@@ -43,20 +42,20 @@ export function AnalyticsPage() {
 
   if (tasks.length === 0) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 max-w-5xl mx-auto">
         <div className="flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-[#19C37D]" />
-          <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-[#829188]">
-            Productivity Intelligence Dashboard
+          <BarChart3 className="w-5 h-5 text-emerald-400" />
+          <h2 className="text-sm font-semibold text-zinc-200">
+            Analytics Overview
           </h2>
         </div>
-        <Card className="p-8 text-center space-y-3">
-          <Info className="w-8 h-8 text-[#829188] mx-auto" />
-          <h3 className="font-mono text-sm font-bold text-[#E8F0EA] uppercase">
-            Not Enough Data Yet
+        <Card className="p-10 text-center space-y-3">
+          <Info className="w-8 h-8 text-zinc-500 mx-auto" />
+          <h3 className="text-base font-semibold text-white">
+            Not enough data yet
           </h3>
-          <p className="text-xs font-sans text-[#829188]">
-            Create and complete tasks to generate productivity intelligence analytics.
+          <p className="text-xs text-zinc-400">
+            Create and complete tasks to start generating productivity metrics.
           </p>
         </Card>
       </div>
@@ -64,17 +63,14 @@ export function AnalyticsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-[#19C37D]" />
-          <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-[#829188]">
-            Productivity Intelligence Dashboard
+        <div className="flex items-center gap-2.5">
+          <BarChart3 className="w-5 h-5 text-emerald-400" />
+          <h2 className="text-sm font-semibold text-zinc-200">
+            Productivity Analytics
           </h2>
         </div>
-        <span className="font-mono text-[10px] text-[#19C37D] bg-[#0B5D3B]/40 border border-[#19C37D]/30 px-2 py-0.5 clip-cut-tr">
-          LIVE DATA ENGINE
-        </span>
       </div>
 
       {/* Streak Metrics Widget */}
@@ -90,32 +86,32 @@ export function AnalyticsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Estimation & Workload Analytics */}
         <Card className="p-5 space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#1A261E] pb-3">
-            <Clock className="w-4 h-4 text-[#19C37D]" />
-            <h3 className="font-mono text-xs font-bold text-[#E8F0EA] uppercase tracking-wider">
-              Estimation & Workload Accuracy
+          <div className="flex items-center gap-2 pb-3 border-b border-white/[0.06]">
+            <Clock className="w-4 h-4 text-emerald-400" />
+            <h3 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+              Workload & Estimation
             </h3>
           </div>
 
-          <div className="space-y-3 font-mono text-xs">
-            <div className="p-3 bg-[#050705] border border-[#1A261E] flex justify-between clip-cut-tr">
-              <span className="text-[#829188]">Total Workload Scope:</span>
-              <span className="text-[#E8F0EA] font-bold">
+          <div className="space-y-2.5 text-xs">
+            <div className="p-3 rounded-lg bg-[#161B22] border border-white/[0.05] flex justify-between">
+              <span className="text-zinc-400">Total Workload Scope:</span>
+              <span className="text-white font-medium">
                 {Math.round(analyticsData.totalEstimatedMinutes / 60)} Hours ({analyticsData.totalEstimatedMinutes}m)
               </span>
             </div>
 
-            <div className="p-3 bg-[#050705] border border-[#1A261E] flex justify-between clip-cut-tr">
-              <span className="text-[#829188]">Finished Workload:</span>
-              <span className="text-[#19C37D] font-bold">
+            <div className="p-3 rounded-lg bg-[#161B22] border border-white/[0.05] flex justify-between">
+              <span className="text-zinc-400">Completed Workload:</span>
+              <span className="text-emerald-400 font-medium">
                 {Math.round(analyticsData.completedEstimatedMinutes / 60)} Hours
               </span>
             </div>
 
-            <div className="p-3 bg-[#050705] border border-[#1A261E] flex justify-between clip-cut-tr">
-              <span className="text-[#829188]">Average Carry-Forward Count:</span>
-              <span className="text-[#FFA502] font-bold">
-                {analyticsData.avgCarryForward}x per task
+            <div className="p-3 rounded-lg bg-[#161B22] border border-white/[0.05] flex justify-between">
+              <span className="text-zinc-400">Average Rollovers per Task:</span>
+              <span className="text-amber-400 font-medium">
+                {analyticsData.avgCarryForward}x
               </span>
             </div>
           </div>
@@ -123,10 +119,10 @@ export function AnalyticsPage() {
 
         {/* List Workload Distribution */}
         <Card className="p-5 space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#1A261E] pb-3">
-            <Folder className="w-4 h-4 text-[#19C37D]" />
-            <h3 className="font-mono text-xs font-bold text-[#E8F0EA] uppercase tracking-wider">
-              Categorical List Workload
+          <div className="flex items-center gap-2 pb-3 border-b border-white/[0.06]">
+            <Folder className="w-4 h-4 text-emerald-400" />
+            <h3 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+              List Distribution
             </h3>
           </div>
 
@@ -138,13 +134,13 @@ export function AnalyticsPage() {
                   ? Math.round((listTaskCount / analyticsData.totalTasks) * 100)
                   : 0;
               return (
-                <div key={list.id}>
-                  <div className="flex justify-between font-mono text-xs mb-1">
-                    <span className="flex items-center gap-1.5 text-[#E8F0EA]">
+                <div key={list.id} className="space-y-1">
+                  <div className="flex justify-between text-xs">
+                    <span className="flex items-center gap-1.5 text-zinc-200">
                       <span className="w-2 h-2 rounded-full" style={{ backgroundColor: list.color }} />
                       {list.name}
                     </span>
-                    <span className="text-[#829188]">
+                    <span className="text-zinc-400">
                       {listTaskCount} tasks ({listPercent}%)
                     </span>
                   </div>

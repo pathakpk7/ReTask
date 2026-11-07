@@ -106,7 +106,7 @@ export function AddTaskModal() {
     <Modal
       isOpen={isAddModalOpen}
       onClose={closeAddModal}
-      title={modalParentId ? '// ADD SUBTASK' : '// CREATE NEW TASK'}
+      title={modalParentId ? 'Add Subtask' : 'Create New Task'}
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
@@ -115,7 +115,7 @@ export function AddTaskModal() {
           name="title"
           value={formData.title}
           onChange={handleChange}
-          placeholder="e.g. Run database vacuum & performance audit"
+          placeholder="e.g. Design modular architecture and review API tokens"
           error={errors.title}
         />
 
@@ -124,7 +124,7 @@ export function AddTaskModal() {
           name="description"
           value={formData.description}
           onChange={handleChange}
-          placeholder="Operational notes or implementation context..."
+          placeholder="Implementation notes, context, or sub-deliverables..."
           rows={2}
         />
 
@@ -135,10 +135,10 @@ export function AddTaskModal() {
             value={formData.priority}
             onChange={handleChange}
           >
-            <option value="urgent">Urgent [P0]</option>
-            <option value="high">High [P1]</option>
-            <option value="medium">Medium [P2]</option>
-            <option value="low">Low [P3]</option>
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
           </Select>
 
           <Select
@@ -177,7 +177,7 @@ export function AddTaskModal() {
             value={formData.parentId}
             onChange={handleChange}
           >
-            <option value="">None [Root Task]</option>
+            <option value="">None (Root Task)</option>
             {tasks.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.title}
@@ -200,24 +200,24 @@ export function AddTaskModal() {
         </div>
 
         {/* Recurrence Options */}
-        <div className="p-3 bg-[#050705] border border-[#1A261E] clip-cut-tr space-y-3">
+        <div className="p-3.5 rounded-xl bg-[#161B22] border border-white/[0.05] space-y-3">
           <label className="flex items-center gap-2.5 cursor-pointer">
             <input
               type="checkbox"
               name="isRecurring"
               checked={formData.isRecurring}
               onChange={handleChange}
-              className="accent-[#19C37D] w-4 h-4"
+              className="accent-emerald-500 w-4 h-4 rounded"
             />
-            <span className="font-mono text-xs font-bold text-[#E8F0EA] flex items-center gap-1.5 uppercase">
-              <Repeat className="w-3.5 h-3.5 text-[#19C37D]" /> Enable Task Recurrence
+            <span className="text-xs font-medium text-white flex items-center gap-1.5">
+              <Repeat className="w-3.5 h-3.5 text-emerald-400" /> Enable recurrence
             </span>
           </label>
 
           {formData.isRecurring && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <Select
-                label="Recurrence Frequency"
+                label="Frequency"
                 name="recurrenceFrequency"
                 value={formData.recurrenceFrequency}
                 onChange={handleChange}
@@ -243,7 +243,7 @@ export function AddTaskModal() {
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#1A261E]">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/[0.06]">
           <Button variant="ghost" onClick={closeAddModal}>
             Cancel
           </Button>

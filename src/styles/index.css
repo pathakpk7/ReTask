@@ -8,138 +8,59 @@
     color-scheme: dark;
   }
 
-  /* Industrial Custom Scrollbar */
+  body {
+    background-color: #08090A;
+    color: #F3F4F6;
+    overflow-x: hidden;
+  }
+
+  /* Refined, unobtrusive custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #050705;
-    border-left: 1px solid #1A261E;
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #101712;
-    border: 1px solid #0B5D3B;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #0B5D3B;
-    box-shadow: 0 0 8px #19C37D;
+    background: rgba(16, 185, 129, 0.4);
   }
-}
 
-/* Keyframe Animations */
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes marquee-reverse {
-  0% {
-    transform: translateX(-50%);
-  }
-  100% {
-    transform: translateX(0%);
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.4;
-    box-shadow: 0 0 15px rgba(25, 195, 125, 0.2);
-  }
-  50% {
-    opacity: 1;
-    box-shadow: 0 0 35px rgba(25, 195, 125, 0.6);
-  }
-}
-
-@keyframes scanline {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(1000%);
+  /* Accessibility focus ring */
+  :focus-visible {
+    outline: 2px solid #10B981;
+    outline-offset: 2px;
   }
 }
 
 @layer utilities {
-  /* Infinite Marquee Animation Utilities */
-  .animate-marquee {
-    animation: marquee 30s linear infinite;
-  }
-  .animate-marquee:hover {
-    animation-play-state: paused;
+  /* Subtle architectural backdrop */
+  .bg-radial-atmosphere {
+    background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
   }
 
-  .animate-marquee-fast {
-    animation: marquee 18s linear infinite;
-  }
-  .animate-marquee-fast:hover {
-    animation-play-state: paused;
+  .bg-subtle-glow {
+    background: radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.04) 0%, transparent 70%);
   }
 
-  .animate-marquee-reverse {
-    animation: marquee-reverse 35s linear infinite;
-  }
-  .animate-marquee-reverse:hover {
-    animation-play-state: paused;
-  }
-
-  .animate-float {
-    animation: float 4s ease-in-out infinite;
-  }
-
-  .animate-pulse-glow {
-    animation: pulseGlow 3s ease-in-out infinite;
-  }
-
-  .animate-scanline {
-    animation: scanline 8s linear infinite;
-  }
-
-  /* Geometric Cut Corners */
-  .clip-cut-tr {
-    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
-  }
-
-  .clip-cut-tr-lg {
-    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
-  }
-
-  .clip-cut-bl-tr {
-    clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, calc(100% - 10px) 100%, 0 calc(100% - 10px));
-  }
-
+  /* Backwards compatibility aliases for old classes so other views don't break */
+  .clip-cut-tr,
+  .clip-cut-tr-lg,
+  .clip-cut-bl-tr,
   .clip-chamfer-box {
-    clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+    border-radius: 10px;
   }
 
-  /* Tactile Bevel Borders */
   .neo-border-bevel {
-    border: 1px solid #1A261E;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .neo-border-glow {
-    border: 1px solid #0B5D3B;
-    box-shadow: 0 0 12px rgba(25, 195, 125, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  }
-
-  /* Green Cut Line Indicator */
-  .cut-line-green {
-    background: linear-gradient(90deg, #19C37D 0%, rgba(25, 195, 125, 0.2) 80%, transparent 100%);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
   }
 }

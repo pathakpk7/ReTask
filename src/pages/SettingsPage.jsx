@@ -12,7 +12,7 @@ export function SettingsPage() {
 
   const handleExport = () => {
     const data = {
-      version: '1.0',
+      version: '2.0',
       timestamp: new Date().toISOString(),
       tasks: storageService.getTasks(),
       lists: storageService.getLists(),
@@ -62,51 +62,55 @@ export function SettingsPage() {
   const handleReset = () => {
     if (window.confirm('Reset all tasks and lists back to factory seed defaults?')) {
       resetSeedData();
-      setStatusMsg('System restored to factory seed state.');
+      setStatusMsg('System restored to default sample state.');
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center gap-2">
-        <Settings className="w-5 h-5 text-[#19C37D]" />
-        <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-[#829188]">
-          System Configuration & Data Management
+      <div className="flex items-center gap-2.5">
+        <Settings className="w-5 h-5 text-emerald-400" />
+        <h2 className="text-sm font-semibold text-zinc-200">
+          Settings & Data Management
         </h2>
       </div>
 
       {statusMsg && (
-        <div className="p-3 bg-[#101712] border border-[#19C37D] text-[#19C37D] font-mono text-xs clip-cut-tr">
+        <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl">
           {statusMsg}
         </div>
       )}
 
       {/* Storage & Backup Section */}
       <Card className="p-6 space-y-4">
-        <div className="flex items-center gap-3 border-b border-[#1A261E] pb-3">
-          <Database className="w-5 h-5 text-[#19C37D]" />
+        <div className="flex items-center gap-3 pb-3 border-b border-white/[0.06]">
+          <Database className="w-5 h-5 text-emerald-400" />
           <div>
-            <h3 className="font-mono text-sm font-bold text-[#E8F0EA] uppercase">
-              LOCAL PERSISTENCE ENGINE
+            <h3 className="text-sm font-semibold text-white">
+              Data Storage & Backup
             </h3>
-            <p className="text-xs font-sans text-[#829188]">
-              Manage local database state, backups, and data imports.
+            <p className="text-xs text-zinc-400 mt-0.5">
+              Manage your local browser database, export archives, or import data.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-          <div className="p-4 bg-[#050705] border border-[#1A261E] clip-cut-tr space-y-3">
-            <span className="text-[10px] font-mono text-[#829188] uppercase block">Data Backup</span>
-            <p className="text-xs text-[#E8F0EA]">Export current task tree and settings to JSON file.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+          <div className="p-4 rounded-xl bg-[#161B22] border border-white/[0.05] space-y-3 flex flex-col justify-between">
+            <div>
+              <span className="text-xs font-medium text-white block">Export Backup</span>
+              <p className="text-xs text-zinc-400 mt-1">Download tasks, lists, and settings as a JSON archive.</p>
+            </div>
             <Button variant="secondary" size="sm" fullWidth onClick={handleExport}>
-              <Download className="w-3.5 h-3.5" /> Export JSON
+              <Download className="w-3.5 h-3.5 mr-1" /> Export JSON
             </Button>
           </div>
 
-          <div className="p-4 bg-[#050705] border border-[#1A261E] clip-cut-tr space-y-3">
-            <span className="text-[10px] font-mono text-[#829188] uppercase block">Restore Backup</span>
-            <p className="text-xs text-[#E8F0EA]">Import tasks from a previously exported backup file.</p>
+          <div className="p-4 rounded-xl bg-[#161B22] border border-white/[0.05] space-y-3 flex flex-col justify-between">
+            <div>
+              <span className="text-xs font-medium text-white block">Restore Backup</span>
+              <p className="text-xs text-zinc-400 mt-1">Import a previously saved JSON backup file.</p>
+            </div>
             <input
               type="file"
               ref={fileInputRef}
@@ -115,50 +119,52 @@ export function SettingsPage() {
               className="hidden"
             />
             <Button variant="secondary" size="sm" fullWidth onClick={handleImportClick}>
-              <Upload className="w-3.5 h-3.5" /> Import JSON
+              <Upload className="w-3.5 h-3.5 mr-1" /> Import JSON
             </Button>
           </div>
 
-          <div className="p-4 bg-[#050705] border border-[#1A261E] clip-cut-tr space-y-3">
-            <span className="text-[10px] font-mono text-[#FF4757] uppercase block">Factory Reset</span>
-            <p className="text-xs text-[#E8F0EA]">Reset storage back to initial factory demo seed state.</p>
+          <div className="p-4 rounded-xl bg-[#161B22] border border-white/[0.05] space-y-3 flex flex-col justify-between">
+            <div>
+              <span className="text-xs font-medium text-red-400 block">Factory Reset</span>
+              <p className="text-xs text-zinc-400 mt-1">Reset your workspace back to initial clean demo tasks.</p>
+            </div>
             <Button variant="danger" size="sm" fullWidth onClick={handleReset}>
-              <RotateCcw className="w-3.5 h-3.5" /> Reset Defaults
+              <RotateCcw className="w-3.5 h-3.5 mr-1" /> Reset Defaults
             </Button>
           </div>
         </div>
       </Card>
 
-      {/* Visual Identity & Architecture Card */}
+      {/* Visual Identity Palette */}
       <Card className="p-6 space-y-4">
-        <div className="flex items-center gap-3 border-b border-[#1A261E] pb-3">
-          <ShieldCheck className="w-5 h-5 text-[#19C37D]" />
+        <div className="flex items-center gap-3 pb-3 border-b border-white/[0.06]">
+          <ShieldCheck className="w-5 h-5 text-emerald-400" />
           <div>
-            <h3 className="font-mono text-sm font-bold text-[#E8F0EA] uppercase">
-              GEOMETRIC NEO-SKEUOMORPHISM IDENTITY
+            <h3 className="text-sm font-semibold text-white">
+              Visual System Tokens
             </h3>
-            <p className="text-xs font-sans text-[#829188]">
-              Design System standards & UI specifications.
+            <p className="text-xs text-zinc-400 mt-0.5">
+              High-contrast, accessibility-audited color architecture.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs text-center">
-          <div className="p-3 bg-[#050705] border border-[#1A261E]">
-            <span className="text-[#829188] text-[10px] block">BACKGROUND</span>
-            <span className="text-[#E8F0EA] font-bold">#050705</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs text-center">
+          <div className="p-3 rounded-lg bg-[#161B22] border border-white/[0.05]">
+            <span className="text-zinc-500 text-[11px] block">Obsidian Base</span>
+            <span className="text-white font-mono font-medium">#08090A</span>
           </div>
-          <div className="p-3 bg-[#050705] border border-[#1A261E]">
-            <span className="text-[#829188] text-[10px] block">SURFACE</span>
-            <span className="text-[#E8F0EA] font-bold">#0B100D</span>
+          <div className="p-3 rounded-lg bg-[#161B22] border border-white/[0.05]">
+            <span className="text-zinc-500 text-[11px] block">Matte Surface</span>
+            <span className="text-white font-mono font-medium">#0F1216</span>
           </div>
-          <div className="p-3 bg-[#050705] border border-[#1A261E]">
-            <span className="text-[#829188] text-[10px] block">PRIMARY GREEN</span>
-            <span className="text-[#19C37D] font-bold">#19C37D</span>
+          <div className="p-3 rounded-lg bg-[#161B22] border border-white/[0.05]">
+            <span className="text-zinc-500 text-[11px] block">Emerald Accent</span>
+            <span className="text-emerald-400 font-mono font-medium">#10B981</span>
           </div>
-          <div className="p-3 bg-[#050705] border border-[#1A261E]">
-            <span className="text-[#829188] text-[10px] block">DARK ACCENT</span>
-            <span className="text-[#0B5D3B] font-bold">#0B5D3B</span>
+          <div className="p-3 rounded-lg bg-[#161B22] border border-white/[0.05]">
+            <span className="text-zinc-500 text-[11px] block">Elevated Slate</span>
+            <span className="text-zinc-300 font-mono font-medium">#161B22</span>
           </div>
         </div>
       </Card>

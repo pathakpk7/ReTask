@@ -10,7 +10,7 @@ import {
   BarChart3,
   Settings,
   Plus,
-  Terminal,
+  Compass,
   X,
   List,
   Edit2,
@@ -41,29 +41,32 @@ export function Sidebar({ isOpen, onClose }) {
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-[#050705]/80 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
         />
       )}
 
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-40 w-64 bg-[#0B100D] border-r border-[#1A261E] flex flex-col transition-transform duration-200 ease-in-out md:static md:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-40 w-64 bg-[#0B0E12] border-r border-white/[0.07] flex flex-col transition-transform duration-200 ease-in-out md:static md:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Brand Header */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-[#1A261E] bg-[#101712]">
-          <div className="flex items-center gap-2.5">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-white/[0.07]">
+          <div
+            className="flex items-center gap-2.5 cursor-pointer group"
+            onClick={() => navigate('/')}
+          >
             <img
               src="/logo.png"
               alt="ReTask Logo"
-              className="w-8 h-8 rounded border border-[#19C37D]/50 clip-cut-tr shadow-[0_0_10px_rgba(25,195,125,0.4)] object-cover"
+              className="w-8 h-8 rounded-lg object-cover transition-transform group-hover:scale-105"
             />
             <div>
-              <div className="font-mono text-sm font-extrabold tracking-widest text-[#E8F0EA] flex items-center gap-1.5">
-                RETASK <span className="text-[10px] px-1 bg-[#0B5D3B] text-[#19C37D] border border-[#19C37D]/50">OS</span>
+              <div className="text-sm font-semibold text-white tracking-tight flex items-center gap-1.5">
+                ReTask
               </div>
-              <p className="text-[9px] font-mono text-[#829188] uppercase tracking-tighter">
-                FOCUS • PLAN • ACHIEVE
+              <p className="text-[11px] text-zinc-500 font-normal">
+                Focus & Workflow
               </p>
             </div>
           </div>
@@ -72,14 +75,14 @@ export function Sidebar({ isOpen, onClose }) {
             type="button"
             onClick={onClose}
             aria-label="Close sidebar"
-            className="p-1 text-[#829188] hover:text-[#E8F0EA] md:hidden"
+            className="p-1 text-zinc-400 hover:text-white rounded-md md:hidden"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Quick Action Button */}
-        <div className="p-4 border-b border-[#1A261E]">
+        <div className="p-3 border-b border-white/[0.07]">
           <Button
             variant="primary"
             fullWidth
@@ -95,15 +98,15 @@ export function Sidebar({ isOpen, onClose }) {
 
         {/* Navigation Sections */}
         <div className="flex-1 px-3 py-4 space-y-6 overflow-y-auto custom-scrollbar">
-          {/* System Views */}
+          {/* Main Views */}
           <div className="space-y-1">
-            <p className="px-3 text-[10px] font-mono text-[#829188] uppercase tracking-widest mb-2 font-bold">
-              System Views
+            <p className="px-3 text-[11px] font-medium text-zinc-500 uppercase tracking-wider mb-2">
+              Views
             </p>
             <NavItem
               to="/landing"
-              icon={Terminal}
-              label="Overview Story"
+              icon={Compass}
+              label="Product Tour"
               onClick={onClose}
             />
             <NavItem
@@ -116,14 +119,14 @@ export function Sidebar({ isOpen, onClose }) {
             <NavItem
               to="/tasks"
               icon={CheckSquare}
-              label="Task Hierarchy"
+              label="All Tasks"
               badgeCount={allActiveCount}
               onClick={onClose}
             />
             <NavItem
               to="/overdue"
               icon={AlertTriangle}
-              label="Overdue Ops"
+              label="Overdue"
               badgeCount={overdueCount > 0 ? overdueCount : undefined}
               badgeVariant={overdueCount > 0 ? 'urgent' : 'muted'}
               onClick={onClose}
@@ -138,20 +141,20 @@ export function Sidebar({ isOpen, onClose }) {
             />
           </div>
 
-          {/* Focus & Metrics */}
+          {/* Deep Focus & Insights */}
           <div className="space-y-1">
-            <p className="px-3 text-[10px] font-mono text-[#829188] uppercase tracking-widest mb-2 font-bold">
-              Focus & Metrics
+            <p className="px-3 text-[11px] font-medium text-zinc-500 uppercase tracking-wider mb-2">
+              Focus & Insights
             </p>
-            <NavItem to="/focus" icon={Zap} label="Focus Mode" onClick={onClose} />
-            <NavItem to="/analytics" icon={BarChart3} label="Analytics" onClick={onClose} />
-            <NavItem to="/lists" icon={Folder} label="Lists Manager" onClick={onClose} />
+            <NavItem to="/focus" icon={Zap} label="Deep Focus" onClick={onClose} />
+            <NavItem to="/analytics" icon={BarChart3} label="Productivity Analytics" onClick={onClose} />
+            <NavItem to="/lists" icon={Folder} label="Manage Lists" onClick={onClose} />
           </div>
 
           {/* Custom Lists Filter */}
-          <div className="space-y-1 pt-2 border-t border-[#1A261E]">
-            <div className="flex items-center justify-between px-3 mb-2">
-              <p className="text-[10px] font-mono text-[#829188] uppercase tracking-widest font-bold">
+          <div className="space-y-1 pt-3 border-t border-white/[0.07]">
+            <div className="flex items-center justify-between px-3 mb-1.5">
+              <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider">
                 Lists
               </p>
               <button
@@ -159,7 +162,7 @@ export function Sidebar({ isOpen, onClose }) {
                 onClick={() => openListModal()}
                 title="Create New List"
                 aria-label="Create list"
-                className="p-0.5 text-[#829188] hover:text-[#19C37D] focus:outline-none focus:text-[#19C37D]"
+                className="p-1 text-zinc-400 hover:text-emerald-400 rounded transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
               </button>
@@ -168,17 +171,17 @@ export function Sidebar({ isOpen, onClose }) {
             <button
               type="button"
               onClick={() => handleCategorySelect('all')}
-              aria-label="Filter by All Categories"
-              className={`w-full flex items-center justify-between px-3 py-2 text-xs font-mono transition-all clip-cut-tr cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#19C37D] ${
+              aria-label="Filter by All Lists"
+              className={`w-full flex items-center justify-between px-3 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
                 activeListId === 'all'
-                  ? 'bg-[#101712] text-[#19C37D] font-bold border-l-2 border-[#19C37D] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]'
-                  : 'text-[#829188] hover:text-[#E8F0EA] hover:bg-[#101712]/60'
+                  ? 'bg-emerald-500/10 text-emerald-400 font-semibold'
+                  : 'text-zinc-400 hover:text-white hover:bg-white/5'
               }`}
             >
               <span className="flex items-center gap-2">
-                <List className="w-3.5 h-3.5" /> All Categories
+                <List className="w-3.5 h-3.5" /> All Lists
               </span>
-              <span className="text-[10px]">{tasks.length}</span>
+              <span className="text-[11px] font-mono opacity-80">{tasks.length}</span>
             </button>
 
             {lists.map((list) => {
@@ -189,10 +192,10 @@ export function Sidebar({ isOpen, onClose }) {
                     type="button"
                     onClick={() => handleCategorySelect(list.id)}
                     aria-label={`Filter by ${list.name}`}
-                    className={`flex-1 flex items-center justify-between px-3 py-2 text-xs font-mono transition-all clip-cut-tr cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#19C37D] ${
+                    className={`flex-1 flex items-center justify-between px-3 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
                       activeListId === list.id
-                        ? 'bg-[#101712] text-[#19C37D] font-bold border-l-2 border-[#19C37D] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]'
-                        : 'text-[#829188] hover:text-[#E8F0EA] hover:bg-[#101712]/60'
+                        ? 'bg-emerald-500/10 text-emerald-400 font-semibold'
+                        : 'text-zinc-400 hover:text-white hover:bg-white/5'
                     }`}
                   >
                     <span className="flex items-center gap-2 truncate pr-1">
@@ -202,7 +205,7 @@ export function Sidebar({ isOpen, onClose }) {
                       />
                       <span className="truncate">{list.name}</span>
                     </span>
-                    <span className="text-[10px] opacity-70 flex-shrink-0">{listTaskCount}</span>
+                    <span className="text-[11px] font-mono opacity-80 flex-shrink-0">{listTaskCount}</span>
                   </button>
 
                   <button
@@ -213,7 +216,7 @@ export function Sidebar({ isOpen, onClose }) {
                     }}
                     title={`Edit ${list.name}`}
                     aria-label={`Edit ${list.name}`}
-                    className="p-1 opacity-0 group-hover/item:opacity-100 text-[#829188] hover:text-[#19C37D] focus:opacity-100"
+                    className="p-1 opacity-0 group-hover/item:opacity-100 text-zinc-400 hover:text-white rounded"
                   >
                     <Edit2 className="w-3 h-3" />
                   </button>
@@ -224,15 +227,8 @@ export function Sidebar({ isOpen, onClose }) {
         </div>
 
         {/* Footer */}
-        <div className="p-3 border-t border-[#1A261E] bg-[#101712] space-y-2">
-          <NavItem to="/settings" icon={Settings} label="System Config" onClick={onClose} />
-          <div className="px-3 pt-1 flex items-center justify-between text-[10px] font-mono text-[#829188]">
-            <span className="flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#19C37D] animate-ping" />
-              ONLINE
-            </span>
-            <span>STORAGE: LOCAL</span>
-          </div>
+        <div className="p-3 border-t border-white/[0.07] space-y-1">
+          <NavItem to="/settings" icon={Settings} label="Settings" onClick={onClose} />
         </div>
       </aside>
     </>

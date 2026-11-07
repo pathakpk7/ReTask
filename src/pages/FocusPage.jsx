@@ -62,15 +62,17 @@ export function FocusPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Mode & Session Cycle Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-[#0B100D] border border-[#1A261E] clip-cut-tr">
-        <div className="flex items-center gap-2.5">
-          <Zap className="w-5 h-5 text-[#19C37D] animate-pulse" />
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-[#0F1216] border border-white/[0.07]">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <Zap className="w-4 h-4" />
+          </div>
           <div>
-            <h2 className="font-mono text-sm font-bold uppercase tracking-wider text-[#E8F0EA]">
-              Pomodoro Focus Engine
+            <h2 className="text-sm font-semibold text-white">
+              Deep Focus
             </h2>
-            <span className="text-[10px] font-mono text-[#829188]">
-              Session #{focusTimer.sessionCount} • Persistent State
+            <span className="text-xs text-zinc-400">
+              Session {focusTimer.sessionCount} • Active timer
             </span>
           </div>
         </div>
@@ -89,45 +91,45 @@ export function FocusPage() {
             size="sm"
             onClick={() => handleModeSwitch('shortBreak')}
           >
-            5m Short Rest
+            5m Break
           </Button>
           <Button
             variant={focusTimer.mode === 'longBreak' ? 'primary' : 'secondary'}
             size="sm"
             onClick={() => handleModeSwitch('longBreak')}
           >
-            15m Long Rest
+            15m Rest
           </Button>
           <Button
             variant={focusTimer.mode === 'custom' ? 'primary' : 'secondary'}
             size="sm"
             onClick={() => setIsCustomModalOpen(true)}
           >
-            <Sliders className="w-3.5 h-3.5" />
-            <span>Custom Length</span>
+            <Sliders className="w-3.5 h-3.5 mr-1" />
+            <span>Custom</span>
           </Button>
         </div>
       </div>
 
       {/* Main Timer Display Card */}
-      <Card className="p-8 text-center space-y-6 relative overflow-hidden">
-        <div className="space-y-2">
-          <span className="text-xs font-mono text-[#829188] uppercase tracking-widest block font-bold">
+      <Card className="p-10 text-center space-y-6 relative overflow-hidden">
+        <div className="space-y-3">
+          <span className="text-xs text-zinc-400 uppercase tracking-wider font-medium">
             {focusTimer.mode === 'focus'
-              ? 'OPERATIONAL FOCUS INTERVAL (25m)'
+              ? 'Focus Interval (25 min)'
               : focusTimer.mode === 'shortBreak'
-              ? 'SHORT SYSTEM RECOVERY (5m)'
+              ? 'Short Break (5 min)'
               : focusTimer.mode === 'longBreak'
-              ? 'EXTENDED COOL DOWN (15m)'
-              : `CUSTOM FOCUS INTERVAL (${Math.ceil(focusTimer.secondsLeft / 60)}m)`}
+              ? 'Extended Rest (15 min)'
+              : `Custom Duration (${Math.ceil(focusTimer.secondsLeft / 60)} min)`}
           </span>
-          <div className="font-mono text-6xl md:text-8xl font-extrabold text-[#19C37D] tracking-tighter drop-shadow-[0_0_25px_rgba(25,195,125,0.4)]">
+          <div className="font-mono text-6xl md:text-8xl font-bold text-white tracking-tight my-4">
             {formattedTime}
           </div>
         </div>
 
         {/* Timer Control Toolbar */}
-        <div className="flex items-center justify-center gap-3 flex-wrap">
+        <div className="flex items-center justify-center gap-3 flex-wrap pt-2">
           <Button
             variant="primary"
             size="lg"
@@ -136,33 +138,33 @@ export function FocusPage() {
           >
             {focusTimer.isRunning ? (
               <>
-                <Pause className="w-5 h-5" /> Pause
+                <Pause className="w-4 h-4 mr-1.5" /> Pause
               </>
             ) : (
               <>
-                <Play className="w-5 h-5" /> Start
+                <Play className="w-4 h-4 mr-1.5" /> Start
               </>
             )}
           </Button>
 
           <Button variant="secondary" size="lg" onClick={handleSkip}>
-            <FastForward className="w-5 h-5 text-[#19C37D]" /> Skip
+            <FastForward className="w-4 h-4 mr-1.5 text-zinc-400" /> Skip
           </Button>
 
           <Button variant="secondary" size="lg" onClick={resetFocusTimer}>
-            <RotateCcw className="w-5 h-5" /> Reset
+            <RotateCcw className="w-4 h-4 mr-1.5 text-zinc-400" /> Reset
           </Button>
         </div>
       </Card>
 
       {/* Target Task Section */}
       <Card className="p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-[#1A261E] pb-3">
-          <h3 className="font-mono text-xs font-bold text-[#829188] uppercase tracking-wider">
-            Active Target Task
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/[0.06]">
+          <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+            Current Target Task
           </h3>
           {activeTasks.length > 0 && (
-            <div className="w-64">
+            <div className="w-full sm:w-64">
               <Select
                 value={selectedFocusTaskId}
                 onChange={(e) => setSelectedFocusTaskId(e.target.value)}
@@ -178,16 +180,16 @@ export function FocusPage() {
         </div>
 
         {currentFocusTask ? (
-          <div className="space-y-4">
+          <div className="space-y-4 pt-1">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2">
-                  <h4 className="font-sans text-lg font-bold text-[#E8F0EA]">
+                <div className="flex items-center gap-2.5">
+                  <h4 className="text-base font-semibold text-white">
                     {currentFocusTask.title}
                   </h4>
                   <PriorityBadge priority={currentFocusTask.priority} />
                 </div>
-                <p className="text-xs font-sans text-[#829188] mt-1">
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
                   {currentFocusTask.description || 'No description provided.'}
                 </p>
               </div>
@@ -197,29 +199,29 @@ export function FocusPage() {
                 size="md"
                 onClick={() => toggleComplete(currentFocusTask.id)}
               >
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Mark Complete</span>
+                <CheckCircle2 className="w-4 h-4 mr-1.5" />
+                <span>Mark Done</span>
               </Button>
             </div>
 
             {childSubtasks.length > 0 && (
-              <div className="space-y-2 pt-3 border-t border-[#1A261E]">
-                <span className="text-[10px] font-mono text-[#829188] uppercase block">
-                  Execution Steps ({childSubtasks.filter((s) => s.completed).length}/{childSubtasks.length})
+              <div className="space-y-2 pt-4 border-t border-white/[0.06]">
+                <span className="text-xs text-zinc-400 block font-medium">
+                  Subtasks ({childSubtasks.filter((s) => s.completed).length}/{childSubtasks.length})
                 </span>
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   {childSubtasks.map((sub) => (
                     <div
                       key={sub.id}
                       onClick={() => toggleComplete(sub.id)}
-                      className="flex items-center justify-between p-2.5 bg-[#050705] border border-[#1A261E] hover:border-[#19C37D] cursor-pointer clip-cut-tr text-xs"
+                      className="flex items-center justify-between p-3 rounded-lg bg-[#161B22] border border-white/[0.05] hover:border-white/[0.12] cursor-pointer text-xs transition-colors"
                     >
-                      <span className={sub.completed ? 'line-through text-[#829188]' : 'text-[#E8F0EA]'}>
+                      <span className={sub.completed ? 'line-through text-zinc-500' : 'text-zinc-200'}>
                         {sub.title}
                       </span>
                       <div
-                        className={`w-4 h-4 border flex items-center justify-center clip-cut-tr ${
-                          sub.completed ? 'bg-[#0B5D3B] border-[#19C37D] text-[#E8F0EA]' : 'border-[#1A261E]'
+                        className={`w-4 h-4 rounded flex items-center justify-center ${
+                          sub.completed ? 'bg-emerald-500 text-[#08090A]' : 'border border-white/20'
                         }`}
                       >
                         {sub.completed && <Check className="w-3 h-3 stroke-[3]" />}
@@ -231,7 +233,7 @@ export function FocusPage() {
             )}
           </div>
         ) : (
-          <p className="text-xs font-mono text-[#829188] text-center py-4">
+          <p className="text-xs text-zinc-400 text-center py-4">
             No active tasks available for focus execution.
           </p>
         )}
@@ -241,16 +243,16 @@ export function FocusPage() {
       <Modal
         isOpen={isCustomModalOpen}
         onClose={() => setIsCustomModalOpen(false)}
-        title="Custom Focus Duration Selector"
+        title="Custom Focus Duration"
       >
         <div className="space-y-5">
-          <p className="text-xs font-sans text-[#829188]">
-            Select a custom focus interval duration or enter custom minutes below:
+          <p className="text-xs text-zinc-400">
+            Choose a quick preset or enter custom minutes below:
           </p>
 
           {/* Quick Custom Preset Buttons */}
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 font-mono text-xs">
-            {[10, 15, 30, 45, 50, 60, 90, 120].map((mins) => (
+          <div className="grid grid-cols-4 gap-2 text-xs">
+            {[15, 25, 45, 60].map((mins) => (
               <button
                 key={mins}
                 type="button"
@@ -258,13 +260,13 @@ export function FocusPage() {
                   setCustomMinutesInput(mins);
                   handleApplyCustomMinutes(mins);
                 }}
-                className={`p-2.5 border text-center transition-all clip-cut-tr cursor-pointer ${
+                className={`p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
                   customMinutesInput === mins
-                    ? 'bg-[#19C37D] text-[#050705] font-bold border-[#19C37D]'
-                    : 'bg-[#050705] text-[#829188] hover:text-[#E8F0EA] border-[#1A261E] hover:border-[#19C37D]'
+                    ? 'bg-emerald-500 text-[#08090A] font-semibold border-emerald-500'
+                    : 'bg-[#161B22] text-zinc-300 hover:text-white border-white/10 hover:border-white/20'
                 }`}
               >
-                {mins} Minutes
+                {mins}m
               </button>
             ))}
           </div>
@@ -275,11 +277,11 @@ export function FocusPage() {
               e.preventDefault();
               handleApplyCustomMinutes(customMinutesInput);
             }}
-            className="space-y-4 pt-2 border-t border-[#1A261E]"
+            className="space-y-4 pt-2 border-t border-white/[0.06]"
           >
-            <div className="space-y-1">
-              <label className="text-[10px] font-mono text-[#829188] uppercase font-bold block">
-                Manual Duration (1 to 480 Minutes)
+            <div className="space-y-1.5">
+              <label className="text-xs text-zinc-400 block font-medium">
+                Duration (1 to 480 minutes)
               </label>
               <Input
                 type="number"
@@ -287,16 +289,16 @@ export function FocusPage() {
                 max={480}
                 value={customMinutesInput}
                 onChange={(e) => setCustomMinutesInput(e.target.value)}
-                placeholder="Enter custom minutes..."
+                placeholder="Minutes..."
               />
             </div>
 
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-3 pt-2">
               <Button variant="secondary" size="md" type="button" onClick={() => setIsCustomModalOpen(false)}>
                 Cancel
               </Button>
               <Button variant="primary" size="md" type="submit">
-                Apply Focus Duration
+                Apply
               </Button>
             </div>
           </form>

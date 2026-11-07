@@ -52,38 +52,38 @@ export function TaskDetailPanel() {
   const availableParents = tasks.filter((t) => t.id !== selectedTask.id);
 
   return (
-    <aside className="w-full lg:w-96 bg-[#0B100D] border-t lg:border-t-0 lg:border-l border-[#1A261E] flex flex-col h-full overflow-hidden shadow-2xl transition-all">
+    <aside className="w-full lg:w-96 bg-[#0B0E12] border-t lg:border-t-0 lg:border-l border-white/[0.07] flex flex-col h-full overflow-hidden shadow-2xl transition-all">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-[#1A261E] bg-[#101712]">
+      <div className="flex items-center justify-between p-4 border-b border-white/[0.07]">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-[#19C37D]" />
-          <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-[#E8F0EA]">
-            Task Details & Metrics
+          <div className="w-2 h-2 rounded-full bg-emerald-400" />
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
+            Task Details
           </h3>
         </div>
         <button
           type="button"
           onClick={() => selectTask(null)}
           aria-label="Close detail panel"
-          className="p-1 text-[#829188] hover:text-[#E8F0EA] hover:bg-[#1A261E] clip-cut-tr transition-colors"
+          className="p-1 text-zinc-400 hover:text-white rounded hover:bg-white/5 transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
       {/* Body */}
-      <div className="flex-1 p-5 overflow-y-auto custom-scrollbar space-y-6">
+      <div className="flex-1 p-5 overflow-y-auto custom-scrollbar space-y-5">
         {/* Lineage / Breadcrumbs */}
         {ancestors.length > 0 && (
-          <div className="flex items-center gap-1.5 flex-wrap font-mono text-[10px] text-[#829188] bg-[#050705] p-2 border border-[#1A261E] clip-cut-tr">
-            <span>Root</span>
+          <div className="flex items-center gap-1.5 flex-wrap text-xs text-zinc-400 bg-white/[0.03] p-2.5 rounded-lg border border-white/[0.05]">
+            <span className="text-zinc-500">Root</span>
             {ancestors.map((ancestor) => (
               <React.Fragment key={ancestor.id}>
-                <ChevronRight className="w-3 h-3 text-[#19C37D]" />
+                <ChevronRight className="w-3.5 h-3.5 text-emerald-400" />
                 <button
                   type="button"
                   onClick={() => selectTask(ancestor.id)}
-                  className="hover:text-[#19C37D] truncate max-w-[100px]"
+                  className="hover:text-emerald-400 truncate max-w-[120px]"
                 >
                   {ancestor.title}
                 </button>
@@ -96,8 +96,8 @@ export function TaskDetailPanel() {
         <div className="space-y-3">
           <div className="flex items-start justify-between gap-3">
             <h2
-              className={`font-sans text-base font-bold tracking-tight ${
-                selectedTask.completed ? 'line-through text-[#829188]' : 'text-[#E8F0EA]'
+              className={`text-base font-semibold tracking-tight ${
+                selectedTask.completed ? 'line-through text-zinc-500' : 'text-white'
               }`}
             >
               {selectedTask.title}
@@ -105,10 +105,10 @@ export function TaskDetailPanel() {
             <button
               type="button"
               onClick={() => toggleComplete(selectedTask.id)}
-              className={`px-3 py-1.5 font-mono text-xs font-bold border transition-all clip-cut-tr flex items-center gap-1.5 flex-shrink-0 ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all flex items-center gap-1.5 flex-shrink-0 ${
                 selectedTask.completed
-                  ? 'bg-[#0B5D3B] text-[#E8F0EA] border-[#19C37D]'
-                  : 'bg-[#050705] text-[#829188] border-[#1A261E] hover:border-[#19C37D] hover:text-[#19C37D]'
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                  : 'bg-white/5 text-zinc-300 border-white/10 hover:border-emerald-400 hover:text-emerald-400'
               }`}
             >
               {selectedTask.completed ? (
@@ -117,7 +117,7 @@ export function TaskDetailPanel() {
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Complete
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Done
                 </>
               )}
             </button>
@@ -128,8 +128,8 @@ export function TaskDetailPanel() {
             <PriorityBadge priority={selectedTask.priority} />
             {selectedTask.difficulty && <DifficultyBadge difficulty={selectedTask.difficulty} />}
             {listInfo && (
-              <span className="flex items-center gap-1 text-[10px] font-mono text-[#829188] bg-[#050705] border border-[#1A261E] px-2 py-0.5 clip-cut-tr">
-                <Folder className="w-2.5 h-2.5" style={{ color: listInfo.color }} />
+              <span className="flex items-center gap-1.5 text-xs text-zinc-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: listInfo.color }} />
                 {listInfo.name}
               </span>
             )}
@@ -138,56 +138,56 @@ export function TaskDetailPanel() {
 
         {/* Carry Forward & Recurrence Metrics Box */}
         {(selectedTask.carryForwardCount > 0 || selectedTask.recurrence?.enabled) && (
-          <div className="p-3 bg-[#050705] border border-[#1A261E] clip-cut-tr space-y-2 font-mono text-xs">
+          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 space-y-2 text-xs">
             {selectedTask.carryForwardCount > 0 && (
-              <div className="flex items-center justify-between text-[#FFA502]">
-                <span className="flex items-center gap-1 text-[11px]">
-                  <Zap className="w-3.5 h-3.5 fill-current" /> Carry-Forward Count:
+              <div className="flex items-center justify-between text-amber-300">
+                <span className="flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5 text-amber-400" /> Rollover count:
                 </span>
-                <span className="font-bold">{selectedTask.carryForwardCount}x</span>
+                <span className="font-semibold">{selectedTask.carryForwardCount}x</span>
               </div>
             )}
 
             {selectedTask.originalDueDate && selectedTask.carryForwardCount > 0 && (
-              <div className="flex items-center justify-between text-[#829188] text-[10px]">
-                <span>Original Scheduled:</span>
+              <div className="flex items-center justify-between text-zinc-400 text-[11px]">
+                <span>Originally scheduled:</span>
                 <span>{formatDate(selectedTask.originalDueDate)}</span>
               </div>
             )}
 
             {selectedTask.recurrence?.enabled && (
-              <div className="flex items-center justify-between text-[#19C37D] pt-1 border-t border-[#1A261E]">
-                <span className="flex items-center gap-1 text-[11px]">
-                  <Repeat className="w-3.5 h-3.5" /> Recurrence:
+              <div className="flex items-center justify-between text-emerald-400 pt-1.5 border-t border-white/10">
+                <span className="flex items-center gap-1.5">
+                  <Repeat className="w-3.5 h-3.5" /> Repeats:
                 </span>
-                <span className="font-bold uppercase">{selectedTask.recurrence.frequency}</span>
+                <span className="capitalize">{selectedTask.recurrence.frequency}</span>
               </div>
             )}
           </div>
         )}
 
         {/* Description */}
-        <div className="space-y-2">
-          <h4 className="text-[10px] font-mono text-[#829188] uppercase tracking-widest font-bold">
+        <div className="space-y-1.5">
+          <h4 className="text-xs font-medium text-zinc-400">
             Description
           </h4>
-          <div className="p-3 bg-[#050705] border border-[#1A261E] clip-cut-tr min-h-[60px]">
-            <p className="text-xs font-sans text-[#E8F0EA] whitespace-pre-wrap leading-relaxed">
-              {selectedTask.description || 'No detailed description provided.'}
+          <div className="p-3.5 rounded-xl bg-[#161B22] border border-white/[0.05] min-h-[60px]">
+            <p className="text-xs text-zinc-300 whitespace-pre-wrap leading-relaxed">
+              {selectedTask.description || 'No description provided.'}
             </p>
           </div>
         </div>
 
-        {/* Hierarchy Parent Re-assignment */}
-        <div className="space-y-2">
-          <h4 className="text-[10px] font-mono text-[#829188] uppercase tracking-widest font-bold flex items-center gap-1">
-            <CornerDownRight className="w-3 h-3 text-[#19C37D]" /> Parent Hierarchy Location
+        {/* Parent Selector */}
+        <div className="space-y-1.5">
+          <h4 className="text-xs font-medium text-zinc-400 flex items-center gap-1">
+            <CornerDownRight className="w-3 h-3 text-emerald-400" /> Parent Task
           </h4>
           <Select
             value={selectedTask.parentId || ''}
             onChange={(e) => reassignParent(selectedTask.id, e.target.value || null)}
           >
-            <option value="">None [Root Level Task]</option>
+            <option value="">None (Root Task)</option>
             {availableParents.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.title}
@@ -197,23 +197,23 @@ export function TaskDetailPanel() {
         </div>
 
         {/* Timeline Metrics */}
-        <div className="grid grid-cols-2 gap-3 font-mono text-xs">
-          <div className="p-3 bg-[#050705] border border-[#1A261E] clip-cut-tr">
-            <span className="text-[10px] text-[#829188] block uppercase">Current Due</span>
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          <div className="p-3 rounded-xl bg-[#161B22] border border-white/[0.05]">
+            <span className="text-[11px] text-zinc-400 block">Due Date</span>
             <span
-              className={`flex items-center gap-1 font-bold mt-1 ${
-                taskOverdue ? 'text-[#FF4757]' : 'text-[#E8F0EA]'
+              className={`flex items-center gap-1 font-medium mt-1 ${
+                taskOverdue ? 'text-red-400' : 'text-zinc-200'
               }`}
             >
-              <Calendar className="w-3.5 h-3.5 text-[#19C37D]" />
+              <Calendar className="w-3.5 h-3.5 text-emerald-400" />
               {formatDate(selectedTask.dueDate)}
             </span>
           </div>
 
-          <div className="p-3 bg-[#050705] border border-[#1A261E] clip-cut-tr">
-            <span className="text-[10px] text-[#829188] block uppercase">Estimate</span>
-            <span className="flex items-center gap-1 font-bold mt-1 text-[#E8F0EA]">
-              <Clock className="w-3.5 h-3.5 text-[#19C37D]" />
+          <div className="p-3 rounded-xl bg-[#161B22] border border-white/[0.05]">
+            <span className="text-[11px] text-zinc-400 block">Estimated Time</span>
+            <span className="flex items-center gap-1 font-medium mt-1 text-zinc-200">
+              <Clock className="w-3.5 h-3.5 text-emerald-400" />
               {selectedTask.estimatedTime || 0}m
             </span>
           </div>
@@ -221,25 +221,25 @@ export function TaskDetailPanel() {
 
         {/* Subtasks Progress */}
         {totalChildren > 0 && (
-          <div className="space-y-3 p-4 bg-[#050705] border border-[#1A261E] clip-cut-tr">
-            <div className="flex items-center justify-between font-mono text-xs">
-              <span className="text-[#829188] uppercase">Subtask Progress</span>
-              <span className="text-[#19C37D] font-bold">
+          <div className="space-y-3 p-4 rounded-xl bg-[#161B22] border border-white/[0.05]">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-zinc-400 font-medium">Subtask Progress</span>
+              <span className="text-emerald-400 font-mono">
                 {completedChildren}/{totalChildren} ({percentComplete}%)
               </span>
             </div>
             <ProgressBar percent={percentComplete} size="md" showLabel={false} />
 
-            <div className="space-y-1.5 pt-2">
+            <div className="space-y-1.5 pt-1">
               {directChildren.map((child) => (
                 <div
                   key={child.id}
                   onClick={() => selectTask(child.id)}
-                  className="flex items-center justify-between p-2 bg-[#101712] border border-[#1A261E] hover:border-[#0B5D3B] cursor-pointer clip-cut-tr text-xs"
+                  className="flex items-center justify-between p-2.5 rounded-lg bg-[#0F1216] border border-white/[0.04] hover:border-white/10 cursor-pointer text-xs"
                 >
                   <span
                     className={`truncate ${
-                      child.completed ? 'line-through text-[#829188]' : 'text-[#E8F0EA]'
+                      child.completed ? 'line-through text-zinc-500' : 'text-zinc-200'
                     }`}
                   >
                     {child.title}
@@ -250,9 +250,9 @@ export function TaskDetailPanel() {
                       e.stopPropagation();
                       toggleComplete(child.id);
                     }}
-                    className="text-[#19C37D] hover:text-[#E8F0EA]"
+                    className="text-emerald-400 hover:text-white"
                   >
-                    {child.completed ? <Check className="w-3.5 h-3.5" /> : <div className="w-3.5 h-3.5 border border-[#1A261E]" />}
+                    {child.completed ? <Check className="w-3.5 h-3.5" /> : <div className="w-3.5 h-3.5 rounded border border-white/20" />}
                   </button>
                 </div>
               ))}
@@ -262,13 +262,13 @@ export function TaskDetailPanel() {
       </div>
 
       {/* Action Footer */}
-      <div className="p-4 border-t border-[#1A261E] bg-[#101712] flex items-center justify-between gap-2">
+      <div className="p-4 border-t border-white/[0.07] bg-[#0E1116] flex items-center justify-between gap-2">
         <Button
           variant="secondary"
           size="sm"
           onClick={() => openAddModal(selectedTask.id)}
         >
-          <Plus className="w-3.5 h-3.5" />
+          <Plus className="w-3.5 h-3.5 mr-1" />
           <span>Subtask</span>
         </Button>
 
@@ -278,7 +278,7 @@ export function TaskDetailPanel() {
             size="sm"
             onClick={() => openEditModal(selectedTask)}
           >
-            <Edit2 className="w-3.5 h-3.5" />
+            <Edit2 className="w-3.5 h-3.5 mr-1" />
             <span>Edit</span>
           </Button>
 
@@ -287,7 +287,7 @@ export function TaskDetailPanel() {
             size="sm"
             onClick={() => openDeleteModal(selectedTask)}
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="w-3.5 h-3.5 mr-1" />
             <span>Delete</span>
           </Button>
         </div>

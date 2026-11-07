@@ -5,20 +5,24 @@ import { twMerge } from 'tailwind-merge';
 export function PriorityBadge({ priority, className = '' }) {
   const configs = {
     urgent: {
-      label: 'URGENT',
-      styles: 'bg-[#2A0E13] text-[#FF4757] border-[#FF4757]/40 shadow-[0_0_8px_rgba(255,71,87,0.3)]',
+      label: 'Urgent',
+      dot: 'bg-red-500',
+      styles: 'bg-red-500/10 text-red-400 border-red-500/20',
     },
     high: {
-      label: 'HIGH',
-      styles: 'bg-[#2B1D06] text-[#FFA502] border-[#FFA502]/40',
+      label: 'High',
+      dot: 'bg-amber-500',
+      styles: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
     },
     medium: {
-      label: 'MEDIUM',
-      styles: 'bg-[#0B1C2E] text-[#1E90FF] border-[#1E90FF]/40',
+      label: 'Medium',
+      dot: 'bg-blue-400',
+      styles: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
     },
     low: {
-      label: 'LOW',
-      styles: 'bg-[#16191D] text-[#829188] border-[#1A261E]',
+      label: 'Low',
+      dot: 'bg-zinc-400',
+      styles: 'bg-white/5 text-zinc-400 border-white/10',
     },
   };
 
@@ -28,12 +32,13 @@ export function PriorityBadge({ priority, className = '' }) {
     <span
       className={twMerge(
         clsx(
-          'inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider border clip-cut-tr',
+          'inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded border',
           config.styles,
           className
         )
       )}
     >
+      <span className={clsx('w-1.5 h-1.5 rounded-full', config.dot)} />
       {config.label}
     </span>
   );
@@ -41,10 +46,10 @@ export function PriorityBadge({ priority, className = '' }) {
 
 export function DifficultyBadge({ difficulty, className = '' }) {
   const configs = {
-    extreme: { label: 'EXTREME', styles: 'text-[#FF4757] border-[#FF4757]/30 bg-[#2A0E13]/50' },
-    hard: { label: 'HARD', styles: 'text-[#FFA502] border-[#FFA502]/30 bg-[#2B1D06]/50' },
-    medium: { label: 'MEDIUM', styles: 'text-[#19C37D] border-[#19C37D]/30 bg-[#0B5D3B]/30' },
-    easy: { label: 'EASY', styles: 'text-[#829188] border-[#1A261E] bg-[#101712]' },
+    extreme: { label: 'Extreme', styles: 'text-red-400 bg-red-500/10 border-red-500/20' },
+    hard: { label: 'Hard', styles: 'text-amber-400 bg-amber-500/10 border-amber-500/20' },
+    medium: { label: 'Medium', styles: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
+    easy: { label: 'Easy', styles: 'text-zinc-400 bg-white/5 border-white/10' },
   };
 
   const config = configs[difficulty?.toLowerCase()] || configs.easy;
@@ -53,7 +58,7 @@ export function DifficultyBadge({ difficulty, className = '' }) {
     <span
       className={twMerge(
         clsx(
-          'inline-flex items-center px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider border',
+          'inline-flex items-center px-2 py-0.5 text-[11px] font-medium rounded border',
           config.styles,
           className
         )

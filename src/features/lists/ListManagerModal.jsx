@@ -7,14 +7,14 @@ import { generateId } from '../../utils/idUtils';
 import { Trash2 } from 'lucide-react';
 
 const PRESET_COLORS = [
-  '#19C37D', // Primary Green
-  '#0B5D3B', // Dark Green
-  '#1E90FF', // Blue
-  '#FFA502', // Orange
-  '#FF4757', // Red
-  '#9B59B6', // Purple
-  '#2ED573', // Lime
-  '#747D8C', // Slate
+  '#10B981', // Emerald
+  '#3B82F6', // Blue
+  '#F59E0B', // Amber
+  '#EF4444', // Red
+  '#8B5CF6', // Purple
+  '#06B6D4', // Cyan
+  '#EC4899', // Pink
+  '#6B7280', // Gray
 ];
 
 export function ListManagerModal() {
@@ -28,17 +28,17 @@ export function ListManagerModal() {
   } = useTaskContext();
 
   const [name, setName] = useState('');
-  const [color, setColor] = useState('#19C37D');
+  const [color, setColor] = useState('#10B981');
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (isListModalOpen) {
       if (modalListToEdit) {
         setName(modalListToEdit.name || '');
-        setColor(modalListToEdit.color || '#19C37D');
+        setColor(modalListToEdit.color || '#10B981');
       } else {
         setName('');
-        setColor('#19C37D');
+        setColor('#10B981');
       }
       setError('');
     }
@@ -78,7 +78,7 @@ export function ListManagerModal() {
 
     if (
       window.confirm(
-        `Delete list "${modalListToEdit.name}"? Tasks in this list will be safely reassigned to Inbox.`
+        `Delete list "${modalListToEdit.name}"? Tasks in this list will be reassigned to Inbox.`
       )
     ) {
       deleteList(modalListToEdit.id);
@@ -90,7 +90,7 @@ export function ListManagerModal() {
     <Modal
       isOpen={isListModalOpen}
       onClose={closeListModal}
-      title={modalListToEdit ? '// EDIT CATEGORICAL LIST' : '// CREATE NEW LIST'}
+      title={modalListToEdit ? 'Edit List' : 'Create New List'}
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         <Input
@@ -100,24 +100,25 @@ export function ListManagerModal() {
             setName(e.target.value);
             if (error) setError('');
           }}
-          placeholder="e.g. System Engineering, Personal, Q4 Roadmap"
+          placeholder="e.g. Work, Engineering, Personal..."
           error={error}
         />
 
         {/* Color Palette Selector */}
         <div className="space-y-2">
-          <label className="block text-[11px] font-mono uppercase tracking-wider text-[#829188]">
-            Color Indicator
+          <label className="block text-xs font-medium text-zinc-300">
+            List Color
           </label>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2.5 flex-wrap">
             {PRESET_COLORS.map((c) => (
               <button
                 key={c}
                 type="button"
                 onClick={() => setColor(c)}
-                className={`w-7 h-7 rounded-none border-2 transition-transform clip-cut-tr ${
+                aria-label={`Select color ${c}`}
+                className={`w-7 h-7 rounded-full border-2 transition-all cursor-pointer ${
                   color === c
-                    ? 'border-[#E8F0EA] scale-110 shadow-[0_0_10px_rgba(255,255,255,0.4)]'
+                    ? 'border-white scale-110 shadow-md ring-2 ring-emerald-500/40'
                     : 'border-transparent hover:scale-105'
                 }`}
                 style={{ backgroundColor: c }}
@@ -127,10 +128,10 @@ export function ListManagerModal() {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#1A261E]">
+        <div className="flex items-center justify-between pt-4 border-t border-white/[0.06]">
           {modalListToEdit && modalListToEdit.id !== 'inbox' ? (
             <Button variant="danger" size="sm" onClick={handleDelete}>
-              <Trash2 className="w-3.5 h-3.5" /> Delete List
+              <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete List
             </Button>
           ) : (
             <div />
